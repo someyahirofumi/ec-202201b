@@ -99,12 +99,12 @@
                           checked="checked"
                         />
                         <span class="price" >&nbsp;М&nbsp;</span
-                        >&nbsp;&nbsp;<span th:text="${item.priceM}+'円(税抜)'">1,380円(税抜)</span>
+                        >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceM,4,'COMMA')}+'円(税抜)'">1,380円(税抜)</span>
                       </label>
                       <label class="radio-inline">
                         <input type="radio" name="responsibleCompany" />
                         <span class="price" >&nbsp;Ｌ</span
-                        >&nbsp;&nbsp;<span th:text="${item.priceL}+'円(税抜)'">2,380円(税抜)</span> 
+                        >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceL,4,'COMMA')}+'円(税抜)'">2,380円(税抜)</span> 
                       </label>
                     </div>
                   </div>

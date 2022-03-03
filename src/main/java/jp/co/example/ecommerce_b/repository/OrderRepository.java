@@ -32,13 +32,12 @@ public class OrderRepository {
 		int beforeOrderItemId = 0;
 		
 		while (rs.next()) {
-			int nowId = rs.getInt("id");
+			int nowId = rs.getInt("order_id");
 			int nowOrderItemId = rs.getInt("order_item_id");
 			
 			if (beforeId != nowId) {
 				Order order = new Order();
 				order.setId(nowId);
-				order.setUserId(rs.getInt("user_id"));
 				order.setTotalPrice(rs.getInt("total_price"));
 				orderItemList = new ArrayList<>();
 				order.setOrderItemList(orderItemList);
@@ -86,20 +85,19 @@ public class OrderRepository {
 		String sql = "SELECT"
 				+ " o.id as order_id,"
 				+ " total_price,"
-				+ " order_item_id"
-				+ " item_id"
+				+ " order_item_id,"
+				+ " item_id,"
 				+ " i.name as item_name,"
 				+ " i.price_M as item_price_M,"
 				+ " i.price_L as item_price_L,"
-				+ " i.image_path as img_path,"
+				+ " image_path,"
 				+ " quantity,"
 				+ " size,"
-				+ " topping_id"
+				+ " topping_id,"
 				+ " t.name as topping_name,"
 				+ " t.price_M as topping_price_M,"
 				+ " t.price_L as topping_price_L"
-				+ " FROM"
-				+ " orders as o"
+				+ " FROM orders as o"
 				+ " LEFT OUTER JOIN order_items as oi ON o.id = oi.order_id"
 				+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
 				+ " LEFT OUTER JOIN items as i ON oi.item_id=i.id"

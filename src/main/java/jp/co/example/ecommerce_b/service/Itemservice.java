@@ -18,11 +18,19 @@ public class Itemservice {
 	@Autowired
 	private Itemrepository itemRepository;
 	
+	/**　送られてきたitemIdを条件としてItemテーブルを検索する
+	 * @param itemId
+	 * @return　itemRepositoryのfindByItemIdメソッド実行する
+	 */
 	public Item findByItemId(Integer itemId) {
 		Item item=itemRepository.findByItemId(itemId);
 		return item;
 	}
 	
+	/**
+	 * @return　全トッピングリスト
+	 * 
+	 */
 	public List<Topping> toppingFindAll(){
 		return itemRepository.findAll();
 		

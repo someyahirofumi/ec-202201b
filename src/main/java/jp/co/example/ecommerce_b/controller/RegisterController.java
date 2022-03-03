@@ -35,12 +35,14 @@ public class RegisterController {
 	private UserService userservice;
 	@RequestMapping("/registerUser")
 	public String registerUser(@Validated UserForm form,BindingResult result,Model model) {
-		
-		//System.out.println(userservice.emailCheck(form.getEmail()));
-		//メールアドレスの重複確認
-		//if(userservice.emailCheck(form.getEmail() != null)) {
+		System.out.println("確認" +  form.getEmail());
+		System.out.println("確認" +  userservice.emailCheck(form.getEmail()));
+		//メールアドレスの重複確認（存在していなくてもエラー文表示される。）
+		if(! userservice.emailCheck(form.getEmail()).equals(null)) {
 			
-		//}
+			result.rejectValue("email",null,"そのメールアドレスはすでに使われています");
+			
+		}
 		
 		//パスワードと確認用パスワードの一致確認
 		if(! form.getPassword().equals(form.getConfirmationPassword())) {
@@ -48,6 +50,7 @@ public class RegisterController {
 		}
 	
 		if(result.hasErrors()) {
+			System.out.println("確認" +  result);
 			return index();
 		}
 		

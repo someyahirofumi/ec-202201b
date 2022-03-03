@@ -1,5 +1,7 @@
 package jp.co.example.ecommerce_b.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -41,9 +43,13 @@ public class UserRepository {
 	 *
 	 */
 	public User emailCheck(String email) {
-		String sql = "SELECT id,name FROM users WHERE email = :email";
+		String sql = "SELECT id,name,email,zipcode,telephone,password FROM users WHERE email = :email";
 		SqlParameterSource param = new MapSqlParameterSource ().addValue("email", email);
-		User user = template.queryForObject(sql, param, USER_ROW_MAPPER);
+		User user= template.queryForObject(sql, param, USER_ROW_MAPPER);
+		
+		if(user == null) {
+			return null;
+		}
 		return user;
 	}
 	

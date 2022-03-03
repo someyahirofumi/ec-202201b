@@ -38,7 +38,10 @@ public class UserForm {
 	@NotBlank(message="電話番号を入力してください")
 	@Pattern(regexp="^[0-9]{4}-[0-9]{4}-[0-9]{4}$",message="電話番号はXXXX-XXXX-XXXXの形式で入力してください")
 	  private String telephone;
-
+	
+	/**  確認用パスワード　*/
+	@NotBlank(message="確認用パスワードを入力してください")
+	  private String confirmationPassword;
 
 	public String getName() {
 		return name;
@@ -88,10 +91,21 @@ public class UserForm {
 		this.telephone = telephone;
 	}
 
+	public String getConfirmationPassword() {
+		return confirmationPassword;
+	}
+
+	public void setConfirmationPassword(String confirmationPassword) {
+		this.confirmationPassword = confirmationPassword;
+	}
+
 	@Override
 	public String toString() {
-		return "UserForm [name=" + name + ", email=" + email + ", password=" + password + ", zipcode="
-				+ zipcode + ", address=" + address + ", telephone=" + telephone + "]";
+		return "UserForm [name=" + name + ", email=" + email + ", password=" + password + ", zipcode=" + zipcode
+				+ ", address=" + address + ", telephone=" + telephone + ", confirmationPassword=" + confirmationPassword
+				+ "]";
 	}
+
+	
 
 }

@@ -24,4 +24,12 @@ public class OrderService {
 	public Order showCart(Integer userId, Integer status) {
 		return orderRepository.findByUserIdAndStatus(userId, status);
 	}
+	
+	/**
+	 * 
+	 * @param order 宛先が格納された注文情報
+	 */
+	public void orderUpdate(Order order) {
+		orderRepository.update(order);
+	}
 }

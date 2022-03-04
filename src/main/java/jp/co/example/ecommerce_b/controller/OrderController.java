@@ -46,4 +46,10 @@ public class OrderController {
 		
 		return "order_confirm";
 	}
+	
+	@RequestMapping("/post")
+	public String order() {
+		return "redirect:/completion";
+	}
+	
 }

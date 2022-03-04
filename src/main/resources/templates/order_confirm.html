@@ -137,7 +137,7 @@
       </div>
 
       <!-- table -->
-      <form action="order_finished.html">
+      <form action="order_finished.html" th:action="@{/order/post}" th:object="${updateOrderForm}">
         <div class="row">
           <div
             class="
@@ -158,7 +158,10 @@
                     <div class="text-center">お名前</div>
                   </td>
                   <td>
-                    <input type="text" />
+                    <div>
+                      <label th:errors="*{destinationName}" style="color: red"></label>
+                    </div>
+                    <input type="text" th:field="*{destinationName}"/>
                   </td>
                 </tr>
                 <tr>
@@ -166,7 +169,10 @@
                     <div class="text-center">メールアドレス</div>
                   </td>
                   <td>
-                    <input type="text" />
+                    <div>
+                      <label th:errors="*{destinationEmail}" style="color: red"></label>
+                    </div>
+                    <input type="email" th:field="*{destinationEmail}"/>
                   </td>
                 </tr>
                 <tr>
@@ -174,7 +180,10 @@
                     <div class="text-center">郵便番号</div>
                   </td>
                   <td>
-                    <input type="text" />&nbsp;&nbsp;<button>住所検索</button>
+                    <div>
+                      <label th:errors="*{destinationZipcode}" style="color: red"></label>
+                    </div>
+                    <input type="text" th:field="*{destinationZipcode}"/>&nbsp;&nbsp;<!-- button>住所検索</button-->
                   </td>
                 </tr>
                 <tr>
@@ -182,7 +191,10 @@
                     <div class="text-center">住所</div>
                   </td>
                   <td>
-                    <input type="text" />
+                    <div>
+                      <label th:errors="*{destinationAddress}" style="color: red"></label>
+                    </div>
+                    <input type="text" th:field="*{destinationAddress}"/>
                   </td>
                 </tr>
                 <tr>
@@ -190,7 +202,10 @@
                     <div class="text-center">電話番号</div>
                   </td>
                   <td>
-                    <input type="text" />
+                    <div>
+                      <label th:errors="*{destinationTel}" style="color: red"></label>
+                    </div>
+                    <input type="text" th:field="*{destinationTel}" />
                   </td>
                 </tr>
                 <tr>
@@ -203,6 +218,7 @@
                         <div class="col-sm-12">
                           <label
                             class="control-label"
+                            th:errors="*{deliveryDate}"
                             style="color: red"
                             for="inputPeriod"
                             >配達日時を入力してください</label
@@ -213,52 +229,23 @@
                             type="date"
                             name="name"
                             id="name"
+                            th:field="*{deliveryDate}"
                             class="form-control input-sm"
                           />
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12" th:each="deliveryTime,status : ${deliveryTimeMap}">
                           <label class="radio-inline">
-                            <input
-                              type="radio"
-                              name="responsibleCompany"
-                              checked="checked"
-                            />
-                            10時
+		                        <input
+		                          type="radio"
+		                          th:field="*{deliveryTime}"
+		                          th:value="${deliveryTime.value}"
+		                          th:checked="${status.index eq 0}"
+		                        />
+                            <span th:text="${deliveryTime.key}">10時</span>
                           </label>
-                          <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
-                            11時
-                          </label>
-                          <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
-                            12時 </label
-                          ><br />
-                          <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
-                            13時
-                          </label>
-                          <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
-                            14時
-                          </label>
-                          <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
-                            15時 </label
-                          ><br />
-                          <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
-                            16時
-                          </label>
-                          <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
-                            17時
-                          </label>
-                          <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
-                            18時 </label
-                          ><br />
+                          <th:block th:if="${status.count} == 3"><br></th:block>
                         </div>
                       </div>
                     </div>
@@ -295,8 +282,8 @@
                         <label class="radio-inline">
                           <input
                             type="radio"
-                            name="responsibleCompany"
-                            checked="checked"
+                            th:field="*{paymentMethod}"
+                            th:value="1"
                           />
                           代金引換
                         </label>
@@ -314,8 +301,8 @@
                         <label class="radio-inline">
                           <input
                             type="radio"
-                            name="responsibleCompany"
-                            checked="checked"
+                            th:field="*{paymentMethod}"
+                            th:value="2"
                           />
                           クレジットカード </label
                         ><br /><br />

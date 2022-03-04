@@ -31,14 +31,14 @@ public class UpdateOrderForm {
 	private String destinationAddress;
 	/** 宛先電話番号 */
 	@NotBlank(message = "電話番号を入力してください")
-	@Pattern(regexp = "^[0-9]{4}-[0-9]{4}-[0-9]{4}$", message = "電話番号はXXXX-XXXX-XXXXの形式で入力してください")
+	@Pattern(regexp = "^[0-9]{2,4}-[0-9]{2,4}-[0-9]{2,4}$", message = "電話番号はXXXX-XXXX-XXXXの形式で入力してください")
 	private String destinationTel;
 	/** 配達日 */
 	@NotBlank(message = "配達日時を入力してください")
-	private String delivaryDate;
+	private String deliveryDate;
 	/** 配達時間 */
 	@NotEmpty(message = "配達日時を入力してください")
-	private String delivaryTime;
+	private String deliveryTime;
 	/** 支払い方法 */
 	private String paymentMethod;
 	
@@ -50,7 +50,7 @@ public class UpdateOrderForm {
 	 */
 	public Date getDateDelivaryDate() throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		return sdf.parse(delivaryDate);
+		return sdf.parse(deliveryDate);
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class UpdateOrderForm {
 	 * @return 配達時間
 	 */
 	public Integer getIntDelivaryTime() {
-		return Integer.parseInt(delivaryTime);
+		return Integer.parseInt(deliveryTime);
 	}
 	
 	/**
@@ -103,17 +103,17 @@ public class UpdateOrderForm {
 	public void setDestinationTel(String destinationTel) {
 		this.destinationTel = destinationTel;
 	}
-	public String getDelivaryDate() {
-		return delivaryDate;
+	public String getDeliveryDate() {
+		return deliveryDate;
 	}
-	public void setDelivaryDate(String delivaryDate) {
-		this.delivaryDate = delivaryDate;
+	public void setDeliveryDate(String deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
-	public String getDelivaryTime() {
-		return delivaryTime;
+	public String getDeliveryTime() {
+		return deliveryTime;
 	}
-	public void setDelivaryTime(String delivaryTime) {
-		this.delivaryTime = delivaryTime;
+	public void setDeliveryTime(String deliveryTime) {
+		this.deliveryTime = deliveryTime;
 	}
 	public String getPaymentMethod() {
 		return paymentMethod;
@@ -130,8 +130,8 @@ public class UpdateOrderForm {
 				+ ", destinationAddress="
 				+ destinationAddress + ", destinationTel="
 				+ destinationTel + ", delivaryDate="
-				+ delivaryDate + ", delivaryTime="
-				+ delivaryTime + ", paymentMethod="
+				+ deliveryDate + ", delivaryTime="
+				+ deliveryTime + ", paymentMethod="
 				+ paymentMethod + "]";
 	}
 }

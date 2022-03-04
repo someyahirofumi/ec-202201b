@@ -15,7 +15,12 @@ import jp.co.example.ecommerce_b.repository.OrderRepository;
 public class OrderService {
 	@Autowired
 	private OrderRepository orderRepository;
-	
+	/**
+	 * 
+	 * @param userId ユーザーID
+	 * @param status 注文状態
+	 * @return カート情報が入ったOrderオブジェクト
+	 */
 	public Order showCart(Integer userId, Integer status) {
 		return orderRepository.findByUserIdAndStatus(userId, status);
 	}

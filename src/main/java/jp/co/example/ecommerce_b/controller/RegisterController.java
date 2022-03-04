@@ -15,12 +15,22 @@ import jp.co.example.ecommerce_b.service.UserService;
 
 
 
-
+/**
+ * ユーザー情報の操作を行うコントローラー
+ * 
+ * @author ishida fuya
+ *
+ */
 @Controller
 @RequestMapping("/register")
 public class RegisterController {
 	
-	//最初の処理
+	/**
+	 * 初期表示を行う
+	 * 
+	 * 
+	 *
+	 */
 	@RequestMapping("")
 	public String index() {
 		return "/register_user";
@@ -33,12 +43,29 @@ public class RegisterController {
 	
 	@Autowired
 	private UserService userservice;
+	
+	
+	/**
+	 * ユーザー情報の登録処理
+	 * 
+	 * @param name,email,password,zipcode,address,telephone,confirmationPassword（パスワードの一致確認に使用）
+	 * 
+	 * 
+	 */
+	/**
+	 * メールアドレスの重複確認
+	 * 
+	 * @param email
+	 * 入力されたメールアドレスの内容を検索し、ユーザー情報にすでに登録されている場合
+	 * エラーメッセージを返す
+	 */
 	@RequestMapping("/registerUser")
 	public String registerUser(@Validated UserForm form,BindingResult result,Model model) {
 		System.out.println("確認" +  form.getEmail());
 		System.out.println("確認" +  userservice.emailCheck(form.getEmail()));
-		//メールアドレスの重複確認（存在していなくてもエラー文表示される。）
-		if(! userservice.emailCheck(form.getEmail()).equals(null)) {
+		
+		//メールアドレスの重複確認
+		if(! userservice.emailCheck(form.getEmail()).isEmpty()) {
 			
 			result.rejectValue("email",null,"そのメールアドレスはすでに使われています");
 			
@@ -49,12 +76,13 @@ public class RegisterController {
 			result.rejectValue("password",null,"パスワードと確認用パスワードが不一致です");
 		}
 	
+		//入力内容に不備がある場合、エラーメッセージを返す
 		if(result.hasErrors()) {
-			System.out.println("確認" +  result);
+			
 			return index();
 		}
 		
-		//上記の確認後、問題がなければ登録処理を行う。
+		//上記の確認後、不備がなければ登録処理を行う。
 		User user = new User();
 		
 		user.setName(form.getName());

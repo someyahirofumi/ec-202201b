@@ -28,7 +28,7 @@ public class UserService {
 	 * @author ishida fuya
 	 *
 	 */
-	public User emailCheck(String email) {
+	public List<User> emailCheck(String email) {
 		return userrepository.emailCheck(email);
 	}
 	

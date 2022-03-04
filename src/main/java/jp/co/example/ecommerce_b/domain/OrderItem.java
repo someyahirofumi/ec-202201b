@@ -58,4 +58,24 @@ public class OrderItem {
 		return "OrderItem [id=" + id + ", orderId=" + orderId + ", itemId=" + itemId + ", quantity=" + quantity
 				+ ", size=" + size + ", item=" + item + ", orderToppingList=" + orderToppingList + "]";
 	}
+	
+	public int getSubTotal() {
+		int subTotalPrice = 0;
+		int orderToppingPrice = 0;
+		for (OrderTopping orderTopping : orderToppingList) {
+			if (size == 'M') {
+				orderToppingPrice += orderTopping.getTopping().getPriceM(); 
+			} else if (size == 'L') {
+				orderToppingPrice += orderTopping.getTopping().getPriceL();
+			}
+			
+		}
+		if (size == 'M') {
+			subTotalPrice = item.getPriceM() + orderToppingPrice;
+		} else if (size == 'L') {
+			subTotalPrice = item.getPriceL() + orderToppingPrice;
+		}
+		
+		return subTotalPrice;
+	}
 }

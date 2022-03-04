@@ -8,6 +8,7 @@ public class Order {
 	
 	private Integer id;
 	private Integer userId;
+	private String preId;
 	private Integer status;
 	private Integer totalPrice;
 	private Date orderDate;
@@ -99,11 +100,11 @@ public class Order {
 	}
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", userId=" + userId + ", status=" + status + ", totalPrice=" + totalPrice
-				+ ", orderDate=" + orderDate + ", destinationName=" + destinationName + ", destinationEmail="
-				+ destinationEmail + ", destinationAddress=" + destinationAddress + ", destinationTel=" + destinationTel
-				+ ", delivaryTime=" + delivaryTime + ", paymentMethod=" + paymentMethod + ", user=" + user
-				+ ", orderItemList=" + orderItemList + "]";
+		return "Order [id=" + id + ", userId=" + userId + ", preId=" + preId + ", status=" + status + ", totalPrice="
+				+ totalPrice + ", orderDate=" + orderDate + ", destinationName=" + destinationName
+				+ ", destinationEmail=" + destinationEmail + ", destinationAddress=" + destinationAddress
+				+ ", destinationTel=" + destinationTel + ", delivaryTime=" + delivaryTime + ", paymentMethod="
+				+ paymentMethod + ", user=" + user + ", orderItemList=" + orderItemList + "]";
 	}
 	
 	public int getTax() {
@@ -111,6 +112,12 @@ public class Order {
 	}
 	public int getCalcTotalPrice() {
 		return totalPrice+getTax();
+	}
+	public String getPreId() {
+		return preId;
+	}
+	public void setPreId(String preId) {
+		this.preId = preId;
 	}
 
 }

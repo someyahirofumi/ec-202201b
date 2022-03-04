@@ -9,12 +9,9 @@ public class IntoCartForm {
 	private Integer itemId;
 	private Integer quantity;
 	private Character size;
-	private String priceM;
+	private Integer priceM;
 	private Integer priceL;
 	private List<Integer> toppingId;
-	public Integer toIntPriceM() {
-		return Integer.parseInt(priceM);
-	}
 	
 	public Integer getQuantity() {
 		return quantity;
@@ -46,10 +43,10 @@ public class IntoCartForm {
 	public List<Integer> getToppingId() {
 		return toppingId;
 	}
-	public String getPriceM() {
+	public Integer getPriceM() {
 		return priceM;
 	}
-	public void setPriceM(String priceM) {
+	public void setPriceM(Integer priceM) {
 		this.priceM = priceM;
 	}
 	public Integer getPriceL() {

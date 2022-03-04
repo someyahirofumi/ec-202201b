@@ -1,5 +1,7 @@
 package jp.co.example.ecommerce_b.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -98,31 +100,53 @@ public class UserController {
 	 * 
 	 * 
 	 */
-	@RequestMapping("/")
+	@RequestMapping("")
 	public String toLogin() {
+		
+		//ログイン状態の確認
+		
+		//ログイン済みの場合
+		if(session.getAttribute("userInfo") != null) {
+			return "/item_list_curry";
+		}
+		
+		//未ログインの場合
 		return "/login";
 	}
+	
+	
+	@Autowired
+	private HttpSession session;
+	
 	
 	
 	/**
 	 * ログイン処理
 	 * 
 	 * @param email,password
-	 * 
+	 * @return ユーザー情報
 	 * 入力内容に不備がある場合、エラーメッセージを返す
 	 * 
 	 */
 	@RequestMapping("/login")
 	public String Login(String email,String password,Model model) {
 		//入力されたメールアドレス、パスワードからユーザー情報を検索
-		System.out.println(email + password);
-		System.out.println(userservice.Login(email, password));
-		
 		//検索結果が０件のとき、エラーメッセージを表示
 		if(userservice.Login(email, password).isEmpty()) {
 			model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
 			return toLogin();
 		}
+		
+		//sessionにユーザー情報を格納(idだけで良い？)
+		System.out.println(userservice.Login(email, password));
+		session.setAttribute("userInfo",userservice.Login(email, password));
+		
+		//遷移先の判定
+		//(sessionスコープにuuidが存在するかの確認)
+		if(session.getAttribute("preID") != null) {
+			return "/item_detail";
+		}
+		
 		
 		//仮で注文一覧画面を表示
 		return "/item_list_curry";

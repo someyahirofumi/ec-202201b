@@ -68,12 +68,15 @@ public class UserRepository {
 	}
 	
 	/**
-	 * ログイン処理　メールアドレス、パスワードからユーザー情報を検索
+	 * ログイン処理
+	 * メールアドレス、パスワードからユーザー情報を検索
+	 * 
 	 * @param email,password
 	 * @return ユーザー情報
 	 *
 	 */
 	public List<User> Login(String email,String password) {
+		//idだけ取ることは可能？？
 		String sql = "SELECT id,name,email,zipcode,telephone,password FROM users WHERE email = :email AND password = :password";
 		SqlParameterSource param = new MapSqlParameterSource ().addValue("email", email).addValue("password", password);
 		

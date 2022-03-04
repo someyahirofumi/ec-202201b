@@ -91,23 +91,24 @@
                     <div class="col-sm-12">
                       <label for="inputResponsibleCompany">サイズ</label>
                     </div>
-                    <div class="col-sm-12" th:field="*{size}">
-                      <label class="radio-inline">
+                    <div class="col-sm-12" >
+                      <label class="radio-inline" >
                         <input
                           type="radio"
                           name="responsibleCompany"
                           checked="checked"
                           value="M"
-                         
+                          th:field="*{size}"
                           id="sizeM"
+                          th:field="*{priceM}=${item.priceM}"
                         />
                         <span class="price" >&nbsp;М&nbsp;</span
-                        >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceM,4,'COMMA')}" id="sizeMprice">1,380</span>円(税抜)
+                        >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceM,4,'COMMA')}" th:value="${item.priceM}" id="sizeMprice" th:field="*{priceM}">1,380</span>円(税抜)
                       </label>
-                      <label class="radio-inline">
-                        <input type="radio" name="responsibleCompany" value="L" id="sizeL" />
-                        <span class="price" >&nbsp;Ｌ</span
-                        >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceL,4,'COMMA')}" id="sizeLprice">2,380</span> 円(税抜)
+                      <label class="radio-inline" >
+                        <input type="radio" name="responsibleCompany" value="L" id="sizeL" th:field="*{size}">
+                        <span class="price" >&nbsp;Ｌ</span>
+                        >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceL,4,'COMMA')}" id="sizeLprice" th:value="${item.priceL}" th:field="*{priceL}">2,380</span> 円(税抜)
                       </label>
                     </div>
                   </div>
@@ -152,7 +153,7 @@
                         <input type="checkbox" value="" />あらびきソーセージ
                       </label>  -->
                        <label class="checkbox-inline" th:each="toppings:${item.toppingList}" >
-                      <input type="checkbox" th:value="${toppings.id}" th:text="${toppings.name}" th:field="*{toppingId}" >
+                      <input type="checkbox" name="topping" class ="toppingCount" th:value="${toppings.id}" th:text="${toppings.name}" th:field="*{toppingId}" >
                       </label> 
                     </div>
                   </div>
@@ -194,7 +195,7 @@
             <div class="row">
               <div class="col-xs-offset-2 col-xs-10">
                 <div class="form-group"><!-- -->
-                  この商品金額：<span id="total-price"  th:text="${#numbers.formatInteger(item.priceM,4,'COMMA')}" th:field="*{totalPrice}"  >38,000 </span>円(税抜)
+                  この商品金額：<span id="total-price"　th:text="${#numbers.formatInteger(item.priceM,4,'COMMA')}"   >0 </span>円(税抜)
                 </div>
               </div>
             </div>

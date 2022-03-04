@@ -64,9 +64,17 @@ public class EcController {
 	    //ログインしていない状態でカートに追加した場合
 //		UUID uuID= UUID.randomUUID();
 //		session.setAttribute("preId", uuID);
-		
-		
-		System.out.println(form);
+		System .out .println(form.getPriceM());
+		int total =0;
+		if(form.getSize()=='M') {
+			total += form.toIntPriceM();
+			total += form.getToppingId().size()*200;
+		}else if(form.getSize() =='L') {
+			total += form.getPriceL();
+			total += form.getToppingId().size()*300;
+		}
+		total *= form.getQuantity();
+		System.out.println(total);
 		Order order = new Order();
 		order.setStatus(0);
 		

@@ -5,17 +5,17 @@ import java.util.List;
 public class IntoCartForm {
 	
 
-	private Integer totalPrice;
+	
 	private Integer itemId;
 	private Integer quantity;
 	private Character size;
+	private String priceM;
+	private Integer priceL;
 	private List<Integer> toppingId;
-	public Integer getTotalPrice() {
-		return totalPrice;
+	public Integer toIntPriceM() {
+		return Integer.parseInt(priceM);
 	}
-	public void setTotalPrice(Integer totalPrice) {
-		this.totalPrice = totalPrice;
-	}
+	
 	public Integer getQuantity() {
 		return quantity;
 	}
@@ -31,8 +31,8 @@ public class IntoCartForm {
 
 	@Override
 	public String toString() {
-		return "IntoCartForm [totalPrice=" + totalPrice + ", itemId=" + itemId + ", quantity=" + quantity + ", size="
-				+ size + ", toppingId=" + toppingId + "]";
+		return "IntoCartForm [ itemId=" + itemId + ", quantity=" + quantity + ", size="
+				+ size + ", priceM=" + priceM + ", priceL=" + priceL + ", toppingId=" + toppingId + "]";
 	}
 	public Integer getItemId() {
 		return itemId;
@@ -45,6 +45,18 @@ public class IntoCartForm {
 	}
 	public List<Integer> getToppingId() {
 		return toppingId;
+	}
+	public String getPriceM() {
+		return priceM;
+	}
+	public void setPriceM(String priceM) {
+		this.priceM = priceM;
+	}
+	public Integer getPriceL() {
+		return priceL;
+	}
+	public void setPriceL(Integer priceL) {
+		this.priceL = priceL;
 	}
 	
 }

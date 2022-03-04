@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -23,7 +24,9 @@ import jp.co.example.ecommerce_b.domain.Topping;
  */
 @Repository
 public class OrderRepository {
-	
+	/**
+	 * Order、OrderItem、OrderToppingオブジェクトを受け取るためのResultSetExtractor
+	 */
 	private static final ResultSetExtractor<List<Order>> ORDER_ORDERITEM_ORDERTOPPING_EXTRACTOR = (rs) -> {
 		List<Order> orderList = new ArrayList<>();
 		List<OrderItem> orderItemList = null;
@@ -80,7 +83,12 @@ public class OrderRepository {
 	
 	@Autowired
 	private NamedParameterJdbcTemplate template;
-	
+	/**
+	 * 
+	 * @param userId ユーザーID
+	 * @param status 注文状態
+	 * @return 注文情報を持ったOrderオブジェクト
+	 */
 	public Order findByUserIdAndStatus(Integer userId, Integer status) {
 		String sql = "SELECT"
 				+ " o.id as order_id,"
@@ -112,4 +120,20 @@ public class OrderRepository {
 		return orderList.get(0);
 	}
 	
+	public void update(Order order) {
+		String sql = "UPDATE orders SET"
+				+ " status=:status,"
+				+ " order_date=:orderDate,"
+				+ " destination_name=:destinationName,"
+				+ " destination_email=:destinationEmail,"
+				+ " destination_zipcode=:destinationZipcode,"
+				+ " destination_address=:destinationAddress,"
+				+ " destination_tel=:destinationTel,"
+				+ " delivery_time=:delivaryTime,"
+				+ " payment_method=:paymentMethod"
+				+ " WHERE id=:id";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
+		
+		template.update(sql, param);
+	}
 }

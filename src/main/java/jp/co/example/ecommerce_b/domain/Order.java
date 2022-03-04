@@ -13,6 +13,7 @@ public class Order {
 	private Date orderDate;
 	private String destinationName;
 	private String destinationEmail;
+	private String destinationZipcode;
 	private String destinationAddress;
 	private String destinationTel;
 	private Timestamp delivaryTime;
@@ -61,6 +62,13 @@ public class Order {
 	public void setDestinationEmail(String destinationEmail) {
 		this.destinationEmail = destinationEmail;
 	}
+	public String getDestinationZipcode() {
+		return destinationZipcode;
+	}
+	public void setDestinationZipcode(
+			String destinationZipcode) {
+		this.destinationZipcode = destinationZipcode;
+	}
 	public String getDestinationAddress() {
 		return destinationAddress;
 	}
@@ -97,15 +105,23 @@ public class Order {
 	public void setOrderItemList(List<OrderItem> orderItemList) {
 		this.orderItemList = orderItemList;
 	}
+	
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", userId=" + userId + ", status=" + status + ", totalPrice=" + totalPrice
-				+ ", orderDate=" + orderDate + ", destinationName=" + destinationName + ", destinationEmail="
-				+ destinationEmail + ", destinationAddress=" + destinationAddress + ", destinationTel=" + destinationTel
-				+ ", delivaryTime=" + delivaryTime + ", paymentMethod=" + paymentMethod + ", user=" + user
+		return "Order [id=" + id + ", userId=" + userId
+				+ ", status=" + status + ", totalPrice="
+				+ totalPrice + ", orderDate=" + orderDate
+				+ ", destinationName=" + destinationName
+				+ ", destinationEmail=" + destinationEmail
+				+ ", destinationZipcode="
+				+ destinationZipcode
+				+ ", destinationAddress="
+				+ destinationAddress + ", destinationTel="
+				+ destinationTel + ", delivaryTime="
+				+ delivaryTime + ", paymentMethod="
+				+ paymentMethod + ", user=" + user
 				+ ", orderItemList=" + orderItemList + "]";
 	}
-	
 	public int getTax() {
 		return totalPrice/10;
 	}

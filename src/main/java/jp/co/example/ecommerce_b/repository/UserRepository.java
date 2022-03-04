@@ -37,7 +37,7 @@ public class UserRepository {
 	};
 	
 	/**
-	 * ユーザー情報の検索処理
+	 * メールアドレスからユーザー情報の検索処理
 	 * @param email
 	 * @return 
 	 *
@@ -65,6 +65,23 @@ public class UserRepository {
 		
 		template.update(insertsql, param);
 		return user;
+	}
+	
+	/**
+	 * ログイン処理
+	 * メールアドレス、パスワードからユーザー情報を検索
+	 * 
+	 * @param email,password
+	 * @return ユーザー情報
+	 *
+	 */
+	public List<User> Login(String email,String password) {
+		//idだけ取ることは可能？？
+		String sql = "SELECT id,name,email,zipcode,telephone,password FROM users WHERE email = :email AND password = :password";
+		SqlParameterSource param = new MapSqlParameterSource ().addValue("email", email).addValue("password", password);
+		
+		List<User>userList = template.query(sql, param, USER_ROW_MAPPER);
+		return userList;
 	}
 
 }

@@ -41,6 +41,19 @@ public class UserService {
 	public User resgisterUser(User user) {
 		return userrepository.registerUser(user);
 	}
+	
+	/**
+	 * ログイン処理
+	 * メールアドレス、パスワードからユーザー情報を検索
+	 * 
+	 * @param email,password
+	 * @return ユーザー情報
+	 *
+	 */
+	public List<User> Login(String email,String password) {
+		
+		return userrepository.Login(email,password);
+	}
 
 
 }

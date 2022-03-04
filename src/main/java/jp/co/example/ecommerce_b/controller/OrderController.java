@@ -79,6 +79,15 @@ public class OrderController {
 		return "order_confirm";
 	}
 	
+	/**
+	 * 入力値から注文テーブルを更新する
+	 * 
+	 * @param form 入力値
+	 * @param result エラー文格納オブジェクト
+	 * @param model
+	 * @return
+	 * @throws ParseException
+	 */
 	@RequestMapping("/post")
 	public String order(
 			@Validated UpdateOrderForm form,
@@ -110,12 +119,14 @@ public class OrderController {
 		Timestamp todayTimestamp = new Timestamp(delivaryDateTimeLong);
 		
 		//orderオブジェクトにformの値をコピー
-		Order order = new Order();
+		Order order = orderService.showCart((Integer) session.getAttribute("userId"), 0);
+		if (order == null) {
+			return "redirect:/item/showList";
+		}
 		BeanUtils.copyProperties(form, order);
 		
 		//コピーできなかった値を手動でコピー
-		int orderId = orderService.showCart((Integer) session.getAttribute("userId"), 0).getId();
-		order.setId(orderId);
+		order.setId(order.getId());
 		order.setOrderDate(sqlToday);
 		order.setDelivaryTime(todayTimestamp);
 		order.setPaymentMethod(form.getIntPaymentMethod());
@@ -129,6 +140,11 @@ public class OrderController {
 		return "redirect:/order/completion";
 	}
 	
+	/**
+	 * 注文完了画面を表示する
+	 * 
+	 * @return
+	 */
 	@RequestMapping("/completion")
 	public String complete() {
 		return "order_finished";

@@ -1,13 +1,36 @@
 package jp.co.example.ecommerce_b.domain;
 
+
+
+/**
+ * ユーザー情報を表すドメイン
+ * 
+ * @author ishida fuya
+ *
+ */
 public class User {
+	
+  /** ID */
   private Integer id;
+  
+  /** 名前 */
   private String name;
+  
+  /** メールアドレス */
   private String email;
+  
+  /** パスワード */
   private String password;
+  
+  /** 郵便番号 */
   private String zipcode;
+  
+  /** 住所 */
   private String address;
+  
+  /** 電話番号 */
   private String telephone;
+  
 public Integer getId() {
 	return id;
 }

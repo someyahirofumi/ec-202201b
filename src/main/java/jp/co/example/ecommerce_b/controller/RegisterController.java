@@ -50,29 +50,22 @@ public class RegisterController {
 	 * 
 	 * @param name,email,password,zipcode,address,telephone,confirmationPassword（パスワードの一致確認に使用）
 	 * 
-	 * 
+	 * ①入力値の形式確認②メールアドレスの重複確認③パスワードと確認パスワードの一致確認
+	 * 上記①〜③に不備がある場合はエラーメッセージを返す
 	 */
-	/**
-	 * メールアドレスの重複確認
-	 * 
-	 * @param email
-	 * 入力されたメールアドレスの内容を検索し、ユーザー情報にすでに登録されている場合
-	 * エラーメッセージを返す
-	 */
+	
 	@RequestMapping("/registerUser")
 	public String registerUser(@Validated UserForm form,BindingResult result,Model model) {
-		System.out.println("確認" +  form.getEmail());
-		System.out.println("確認" +  userservice.emailCheck(form.getEmail()));
 		
 		//メールアドレスの重複確認
 		if(! userservice.emailCheck(form.getEmail()).isEmpty()) {
 			
 			result.rejectValue("email",null,"そのメールアドレスはすでに使われています");
-			
 		}
 		
 		//パスワードと確認用パスワードの一致確認
 		if(! form.getPassword().equals(form.getConfirmationPassword())) {
+			
 			result.rejectValue("password",null,"パスワードと確認用パスワードが不一致です");
 		}
 	

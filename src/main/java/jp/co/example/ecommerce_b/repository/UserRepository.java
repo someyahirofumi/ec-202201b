@@ -46,9 +46,6 @@ public class UserRepository {
 		String sql = "SELECT id,name,email,zipcode,telephone,password FROM users WHERE email = :email";
 		SqlParameterSource param = new MapSqlParameterSource ().addValue("email", email);
 		
-		//検索結果がない場合エラーになる。
-		//エラー文：Incorrect result size: expected 1, actual 0
-		//User user= template.queryForObject(sql, param, USER_ROW_MAPPER);
 		List<User>userList = template.query(sql, param, USER_ROW_MAPPER);
 		return userList;
 	}

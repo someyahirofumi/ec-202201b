@@ -22,8 +22,8 @@ import jp.co.example.ecommerce_b.service.UserService;
  *
  */
 @Controller
-@RequestMapping("/register")
-public class RegisterController {
+@RequestMapping("/user")
+public class UserController {
 	
 	/**
 	 * 初期表示を行う
@@ -31,8 +31,8 @@ public class RegisterController {
 	 * 
 	 *
 	 */
-	@RequestMapping("")
-	public String index() {
+	@RequestMapping("/toRegisterUser")
+	public String toRegisterUser() {
 		return "/register_user";
 	}
 	
@@ -72,7 +72,7 @@ public class RegisterController {
 		//入力内容に不備がある場合、エラーメッセージを返す
 		if(result.hasErrors()) {
 			
-			return index();
+			return toRegisterUser();
 		}
 		
 		//上記の確認後、不備がなければ登録処理を行う。
@@ -87,8 +87,45 @@ public class RegisterController {
 		
 		userservice.resgisterUser(user);
 		
+		return toLogin();
+	}
+	
+	/**
+	 * ログイン画面の初期表示
+	 * 
+	 * @param
+	 * 
+	 * 
+	 * 
+	 */
+	@RequestMapping("/")
+	public String toLogin() {
 		return "/login";
 	}
 	
+	
+	/**
+	 * ログイン処理
+	 * 
+	 * @param email,password
+	 * 
+	 * 入力内容に不備がある場合、エラーメッセージを返す
+	 * 
+	 */
+	@RequestMapping("/login")
+	public String Login(String email,String password,Model model) {
+		//入力されたメールアドレス、パスワードからユーザー情報を検索
+		System.out.println(email + password);
+		System.out.println(userservice.Login(email, password));
+		
+		//検索結果が０件のとき、エラーメッセージを表示
+		if(userservice.Login(email, password).isEmpty()) {
+			model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
+			return toLogin();
+		}
+		
+		//仮で注文一覧画面を表示
+		return "/item_list_curry";
+	}
 }
 

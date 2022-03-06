@@ -48,6 +48,7 @@ public class OrderRepository {
 
 			if (beforeOrderItemId != nowOrderItemId) {
 				OrderItem orderItem = new OrderItem();
+				orderItem.setId(rs.getInt("order_item_id"));
 				orderItem.setItemId(rs.getInt("item_id"));
 				orderItem.setQuantity(rs.getInt("quantity"));
 				orderItem.setSize(rs.getString("size").toCharArray()[0]);
@@ -183,7 +184,7 @@ public class OrderRepository {
 		}
 	}
 	
-	//カートに商品追加時、合計金額の変更update
+	//カートに商品追加時削除時、合計金額の変更update
 	public void updateOrder(Order order) {
 		if(order.getUserId() != null) {
 		String sql ="UPDATE orders SET total_price =:totalPrice WHERE user_id=:userId AND status=0;";
@@ -215,6 +216,23 @@ public class OrderRepository {
 	
 		
 	}
+	
+//	//削除ボタン押下時処理に使用
+//	public OrderItem getOrderItem(Integer orderId) {
+//		String sql = "select * from order_items where id=:orderId;";
+//		String sql2="select * from order_toppings where order_item_id=:orderId;";
+//				
+//		SqlParameterSource param = new MapSqlParameterSource().addValue("orderId",orderId);
+//		
+//		List<OrderItem> list = template.query(sql,param,ORDERITEM_ROW_MAPPER);
+//		List<Topping> toppingList =template.query(sql2,TOPPING_ROW_MAPPER);
+//		if (list.isEmpty()) {
+//			return null;
+//		} else {
+//		
+//			return list.get(0);
+//		}
+//	}
 	
 	//ログインユーザー用カートリスト取得メソッド
 	//全てのテーブルのデータが入っていないと動かない＝ダミーデータを入れておく必要がある？トッピングのテーブル検索は分ける必要あり？
@@ -265,5 +283,18 @@ public class OrderRepository {
 			}
 		
 	}
+	
+	//削除ボタン押下時処理
+	public void deleteCart(Integer id) {
+		String sql="BEGIN;\n"
+				+ "delete from order_items\n"
+				+ "where id=:id;\n"
+				+ "delete from order_toppings\n"
+				+ "where order_item_id=:id;\n"
+				+ "COMMIT;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		template.update(sql, param);
+	}
+	
 	
 }

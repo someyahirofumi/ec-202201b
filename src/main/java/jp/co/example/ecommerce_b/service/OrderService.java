@@ -80,4 +80,13 @@ public class OrderService {
 	public int getNotLoginTotalPrice(String preId) {
 		return orderRepository.getNotLoginTotalPrice(preId);
 	}
+	
+	public void deleteCart(Integer id) {
+		orderRepository.deleteCart(id);
+		
+	}
+//	
+//	public OrderItem getOrderItem(Integer orderId) {
+//		return orderRepository.getOrderItem(orderId);
+//	}
 }

@@ -168,7 +168,7 @@ public class OrderController {
 		//formのトッピングリストから情報を一件ずつ取得し、新たなリストに格納
 		
 		int itemIdd = orderService.getItemId(orderId);
-		System.out.println(form.getToppingId());
+		
 		for(Integer id:form.getToppingId()) {
 			OrderTopping topping = new OrderTopping();
 			topping.setToppingId(id);
@@ -202,8 +202,36 @@ public class OrderController {
 			order=orderService.getNotLoginCartList((String)session.getAttribute("preId"));
 		}
 		//orderListをrequestスコープに格納(orderList)
+		if(order == null) {
+			model.addAttribute("cartNullMessage","カートに商品がありません");
+		}else {
 		model.addAttribute("cart",order);
-		
+		}
 		return "cart_list";
+	}
+	
+	@RequestMapping("/deleteCart")
+	public String deleteCart(Integer orderId,Integer subTotalPrice,Model model) {
+		
+		Order order = new Order();
+		
+//		cartItem=orderService.getOrderItem(orderId);
+	
+		int total=0;
+		//ログイン状態の分岐
+		if(session.getAttribute("userId") != null) {
+			//ログインユーザーの処理
+			total=orderService.getTotalPrice((Integer)session.getAttribute("userId"));
+			order.setUserId((Integer)session.getAttribute("userId"));
+			
+		}else if(session.getAttribute("preId") != null) {
+			total=orderService.getNotLoginTotalPrice((String)session.getAttribute("preId"));
+			order.setPreId((String)session.getAttribute("preId"));
+		}
+		total -= subTotalPrice;
+		order.setTotalPrice(total);
+		orderService.updateOrder(order);
+		orderService.deleteCart(orderId);
+		return toCartList(model);
 	}
 }

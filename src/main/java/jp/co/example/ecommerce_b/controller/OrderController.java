@@ -56,14 +56,17 @@ public class OrderController {
 	}
 	
 	@RequestMapping("/intoCart")
+	
 	public String intoCart(IntoCartForm form,Model model,Integer itemId) {
-		System .out .println(session.getAttribute("preId"));
+		//動作確認用
+		session.setAttribute("userId", 2);
+		
 		//仮登録
 		itemId=1;
 		//必要なオブジェクト生成
 		Order order = new Order();
 		OrderItem item = new OrderItem();
-		OrderTopping topping = new OrderTopping();
+		
 		List<OrderTopping> toppingList = new ArrayList<>();
 
 		//orderId初期化
@@ -73,11 +76,16 @@ public class OrderController {
 		int total =0;
 		if(form.getPriceM() != null) {
 			total += form.getPriceM();
+			//トッピングが選択されている場合の処理
+			if(!(form.getToppingId().isEmpty())) {
 			total += form.getToppingId().size()*200;
+			}
 			item.setSize('M');
 		}else if(form.getPriceL() != null) {
 			total += form.getPriceL();
+			if(!(form.getToppingId().isEmpty())) {
 			total += form.getToppingId().size()*300;
+			}
 			item.setSize('L');
 		}
 		total *= form.getQuantity();
@@ -99,6 +107,11 @@ public class OrderController {
 				orderId=orderService.getOrderId((int)session.getAttribute("userId"));
 			}else {
 				//カートが空じゃない場合の処理
+				//既にカートに入っている合計金額を取得
+				Integer preTotal= orderService.getTotalPrice((Integer)session.getAttribute("userId"));
+				//今カートに追加した商品の金額をカートリスト合計と合わせる
+				total += preTotal;
+				order.setTotalPrice(total);
 				orderService.updateOrder(order);
 			}
 			//orderIdをセット
@@ -130,6 +143,12 @@ public class OrderController {
 				 orderId=orderService.getOrderId2(session.getAttribute("preId").toString());
 				//過去にカート追加した際発行されたpreIdをorderオブジェクトにセット
 				order.setPreId(session.getAttribute("preId").toString());
+				//既にカートに入っている合計金額を取得
+				Integer preTotal= orderService.getNotLoginTotalPrice((String)session.getAttribute("preId"));
+				//今カートに追加した商品の金額をカートリスト合計と合わせる
+				total += preTotal;
+				order.setTotalPrice(total);
+				orderService.updateOrder(order);
 				//合計金額の更新
 				orderService.updateOrder(order);
 			}
@@ -147,19 +166,44 @@ public class OrderController {
 		//orderテーブルへのinsert処理
 		orderService.insertItem(item);
 		//formのトッピングリストから情報を一件ずつ取得し、新たなリストに格納
-		System.out.println("コントローラでのorderId"+orderId);
+		
 		int itemIdd = orderService.getItemId(orderId);
+		System.out.println(form.getToppingId());
 		for(Integer id:form.getToppingId()) {
+			OrderTopping topping = new OrderTopping();
 			topping.setToppingId(id);
 			topping.setOrderItemId(itemIdd);
 			toppingList.add(topping);
+			}
 		//トッピングが選択されていた場合にorderToppingテーブルにinsert処理
+			
 		if (!toppingList.isEmpty()) {
 		orderService.insertTopping(toppingList);
 		}
-		
+		return toCartList(model);
 	}
-		return "cart_list";
 	
-}
+	
+
+	
+
+	@RequestMapping("toCartList")
+	
+	public String toCartList(Model model) {
+		
+		Order order = new Order();
+		//ログイン状態の条件分岐
+		if(session.getAttribute("userId") !=null) {
+			//ログインしている
+			order=orderService.getCartList((Integer)session.getAttribute("userId"));
+			
+		}else if(session.getAttribute("preId") != null) {
+			//非ログイン
+			order=orderService.getNotLoginCartList((String)session.getAttribute("preId"));
+		}
+		//orderListをrequestスコープに格納(orderList)
+		model.addAttribute("cart",order);
+		
+		return "cart_list";
+	}
 }

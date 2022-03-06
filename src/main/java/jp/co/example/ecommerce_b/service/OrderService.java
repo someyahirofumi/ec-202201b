@@ -30,6 +30,10 @@ public class OrderService {
 	}
 	
 	
+	/**
+	 * @param order カート追加orderオブジェクト
+	 * ordersテーブルへのinsert
+	 */
 	public void intoCart(Order order) {
 		orderRepository.intoCart(order);
 	}
@@ -56,5 +60,24 @@ public class OrderService {
 	public int getItemId(Integer orderId) {
 		return orderRepository.getItemId(orderId);
 		
+	}
+	
+	/**
+	 * @param userId
+	 * @return カートに追加された商品情報
+	 * ログインユーザー用メソッド
+	 */
+	public Order getCartList(Integer userId){
+		return orderRepository.getCartList(userId);
+	}
+	public Order getNotLoginCartList(String preId){
+		return orderRepository.getNotLoginCartList(preId);
+	}
+	
+	public int getTotalPrice(Integer userId) {
+		return orderRepository.getTotalPrice(userId);
+	}
+	public int getNotLoginTotalPrice(String preId) {
+		return orderRepository.getNotLoginTotalPrice(preId);
 	}
 }

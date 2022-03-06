@@ -153,8 +153,8 @@
                       <label class="checkbox-inline">
                         <input type="checkbox" value="" />あらびきソーセージ
                       </label>  -->
-                       <label class="checkbox-inline" th:each="toppings:${item.toppingList}" >
-                      <input type="checkbox" name="topping" class ="toppingCount" th:value="${toppings.id}" th:text="${toppings.name}" th:field="*{toppingId}" >
+                       <label class="checkbox-inline" th:each="toppings:${item.toppingList}">
+                      <input type="checkbox" name="topping" class ="toppingCount" th:value="${toppings.id}" th:text="${toppings.name}" th:field="*{toppingId}"  >
                       </label> 
                     </div>
                   </div>

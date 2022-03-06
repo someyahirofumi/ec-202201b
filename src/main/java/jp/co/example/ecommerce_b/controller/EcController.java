@@ -63,39 +63,6 @@ public class EcController {
 		return"item_detail";
 	}
 	
-	@RequestMapping("/intoCart")
-	public String intoCart(IntoCartForm form,Model model,Integer itemId) {
-		Order order = new Order();
-	    //ログインしていない状態でカートに追加した場合
-		if(session.getAttribute("userId") == null) {ß
-		UUID uuID= UUID.randomUUID();
-		String uuid = uuID.toString();
-		
-		session.setAttribute("preId", uuID);
-		order.setPreId(uuid);
-		}else if(session.getAttribute("userId") != null) {
-			order.setUserId((Integer)session.getAttribute("userId") );
-		}
-		
-		System .out .println(form.getPriceM());
-		System .out .println(form.getToppingId().size());
-		//小計金額の計算
-		int total =0;
-		if(form.getPriceM() != null) {
-			total += form.getPriceM();
-			total += form.getToppingId().size()*200;
-		}else if(form.getPriceL() != null) {
-			total += form.getPriceL();
-			total += form.getToppingId().size()*300;
-		}
-		total *= form.getQuantity();
-		
-		order.setTotalPrice(total);
-		order.setStatus(0);
-		
-		return toItemDetail(1,model);
-		
-		
-	}
+
 
 }

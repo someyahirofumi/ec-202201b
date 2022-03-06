@@ -158,6 +158,31 @@ public class OrderRepository {
 		}
 	}
 	
+	//カート内の合計金額取得(userIdをもとに検索)
+	//ログインユーザー用
+	public int getTotalPrice(Integer userId) {
+		String sql = "SELECT total_price FROM orders WHERE user_id = :userId;";
+		SqlParameterSource param = new  MapSqlParameterSource().addValue("userId", userId);
+		List<Order> orderList = template.query(sql, param, ORDER_ROW_MAPPER);
+		if (orderList.isEmpty()) {
+			return 0;
+		} else {
+			return orderList.get(0).getTotalPrice();
+		}
+	}
+	//カート内の合計金額取得(preIdをもとに検索)
+	//非ログインユーザー用
+	public int getNotLoginTotalPrice(String preId) {
+		String sql = "SELECT total_price FROM orders WHERE pre_id = :preId;";
+		SqlParameterSource param = new  MapSqlParameterSource().addValue("preId", preId);
+		List<Order> orderList = template.query(sql, param, ORDER_ROW_MAPPER);
+		if (orderList.isEmpty()) {
+			return 0;
+		} else {
+			return orderList.get(0).getTotalPrice();
+		}
+	}
+	
 	//カートに商品追加時、合計金額の変更update
 	public void updateOrder(Order order) {
 		if(order.getUserId() != null) {
@@ -174,20 +199,71 @@ public class OrderRepository {
 	}
 	private static final RowMapper<OrderItem> ORDERITEM_ROW_MAPPER = new BeanPropertyRowMapper<>(OrderItem.class);
 	//オーダーIDをもとにしてitemIdを取得
+	//→最後にinsertしたidを取得
 	
 	public int getItemId(Integer orderId) {
-		System.out.println("repositoryでのorderID"+orderId);
-		String sql ="SELECT id FROM order_items where order_id=:orderId;";
+//		System.out.println("repositoryでのorderID"+orderId);
+		String sql ="SELECT MAX(id) as id FROM order_items WHERE order_id = :orderId ;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("orderId",orderId);
-		List <OrderItem>list = template.query(sql,param,ORDERITEM_ROW_MAPPER);
-		System.out.println(list);
-		
-	
+		List<OrderItem> list = template.query(sql,param,ORDERITEM_ROW_MAPPER);
+//		System.out.println(list);
 		if (list.isEmpty()) {
 			return 0;
 		} else {
 			return list.get(0).getId();
 		}
+	
 		
 	}
+	
+	//ログインユーザー用カートリスト取得メソッド
+	//全てのテーブルのデータが入っていないと動かない＝ダミーデータを入れておく必要がある？トッピングのテーブル検索は分ける必要あり？
+	public Order getCartList(Integer userId){
+		String sql = 
+				"SELECT o.id as order_id,o.total_price,oi.id as order_item_id,oi.quantity,oi.size,i.name as item_name,"
+				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,"
+						+ " i.id as item_id,i.image_path,t.name as topping_name,t.price_m as topping_price_M,t.price_l as topping_price_L"
+						+ " FROM "
+						+ " orders as o"
+						+ " LEFT OUTER JOIN order_items as oi ON o.id=oi.order_id"
+						+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
+						+ " INNER JOIN items as i ON oi.item_id= i.id"
+						+ " INNER JOIN toppings as t ON ot.topping_id=t.id"
+						+ " WHERE"
+						+ " o.user_id=:userId AND o.status=0;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+		List<Order> cartList=new ArrayList<>();
+		cartList= template.query(sql, param,ORDER_ORDERITEM_ORDERTOPPING_EXTRACTOR);
+		 if (cartList.isEmpty()) {
+				return null;
+			} else {
+				return cartList.get(0);
+			}
+	}
+	
+	//非ログインユーザー用カートリスト取得メソッド
+	public Order getNotLoginCartList(String preId){
+		String sql = 
+				"SELECT o.id as order_id,o.total_price,oi.id as order_item_id,oi.quantity,oi.size,i.name as item_name,"
+				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,"
+						+ " i.id as item_id,i.image_path,t.name as topping_name,t.price_m as topping_price_M,t.price_l as topping_price_L"
+						+ " FROM "
+						+ " orders as o"
+						+ " LEFT OUTER JOIN order_items as oi ON o.id=oi.order_id"
+						+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
+						+ " INNER JOIN items as i ON oi.item_id= i.id"
+						+ " INNER JOIN toppings as t ON ot.topping_id=t.id"
+						+ " WHERE"
+						+ " o.pre_id=:preId AND o.status=0;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("preId", preId);
+		List<Order> cartList=new ArrayList<>();
+		cartList= template.query(sql, param,ORDER_ORDERITEM_ORDERTOPPING_EXTRACTOR);
+		 if (cartList.isEmpty()) {
+				return null;
+			} else {
+				return cartList.get(0);
+			}
+		
+	}
+	
 }

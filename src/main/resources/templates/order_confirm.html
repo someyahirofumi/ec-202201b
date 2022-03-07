@@ -183,7 +183,8 @@
                     <div>
                       <label th:errors="*{destinationZipcode}" style="color: red"></label>
                     </div>
-                    <input type="text" th:field="*{destinationZipcode}"/>&nbsp;&nbsp;<!-- button>住所検索</button-->
+                    <input id="zipcode" type="text" th:field="*{destinationZipcode}"/>
+                    &nbsp;&nbsp;<button id="zipcode_btn">住所検索</button>
                   </td>
                 </tr>
                 <tr>
@@ -194,7 +195,7 @@
                     <div>
                       <label th:errors="*{destinationAddress}" style="color: red"></label>
                     </div>
-                    <input type="text" th:field="*{destinationAddress}"/>
+                    <input id="address" type="text" th:field="*{destinationAddress}"/>
                   </td>
                 </tr>
                 <tr>
@@ -330,7 +331,9 @@
       </form>
     </div>
     <!-- end container -->
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/zipcode.js}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.js}"></script>
   </body>
 </html>

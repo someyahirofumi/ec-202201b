@@ -184,7 +184,7 @@
                       <label th:errors="*{destinationZipcode}" style="color: red"></label>
                     </div>
                     <input id="zipcode" type="text" th:field="*{destinationZipcode}"/>
-                    &nbsp;&nbsp;<button id="zipcode_btn">住所検索</button>
+                    &nbsp;&nbsp;<button type="button" id="zipcode_btn">住所検索</button>
                   </td>
                 </tr>
                 <tr>
@@ -195,6 +195,7 @@
                     <div>
                       <label th:errors="*{destinationAddress}" style="color: red"></label>
                     </div>
+                    <div id="zipcode_msg" style="color: red"></div>
                     <input id="address" type="text" th:field="*{destinationAddress}"/>
                   </td>
                 </tr>

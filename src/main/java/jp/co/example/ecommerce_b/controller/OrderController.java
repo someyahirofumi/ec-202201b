@@ -129,7 +129,7 @@ public class OrderController {
 		//コピーできなかった値を手動でコピー
 		order.setId(order.getId());
 		order.setOrderDate(sqlToday);
-		order.setDelivaryTime(todayTimestamp);
+		order.setDeliveryTime(todayTimestamp);
 		order.setPaymentMethod(form.getIntPaymentMethod());
 		if (order.getPaymentMethod() == 1) {
 			order.setStatus(1);
@@ -164,7 +164,7 @@ public class OrderController {
 		
 		List<Order> orderList = orderService.getHistory(1); 
 		model.addAttribute("orderList", orderList);
-		
+		System.out.println(orderList);
 		return "order_history";
 	}
 }

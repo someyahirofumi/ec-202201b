@@ -16,7 +16,7 @@ public class Order {
 	private String destinationZipcode;
 	private String destinationAddress;
 	private String destinationTel;
-	private Timestamp delivaryTime;
+	private Timestamp deliveryTime;
 	private Integer paymentMethod;
 	private User user;
 	private List<OrderItem> orderItemList;
@@ -81,11 +81,11 @@ public class Order {
 	public void setDestinationTel(String destinationTel) {
 		this.destinationTel = destinationTel;
 	}
-	public Timestamp getDelivaryTime() {
-		return delivaryTime;
+	public Timestamp getDeliveryTime() {
+		return deliveryTime;
 	}
-	public void setDelivaryTime(Timestamp delivaryTime) {
-		this.delivaryTime = delivaryTime;
+	public void setDeliveryTime(Timestamp deliveryTime) {
+		this.deliveryTime = deliveryTime;
 	}
 	public Integer getPaymentMethod() {
 		return paymentMethod;
@@ -118,7 +118,7 @@ public class Order {
 				+ ", destinationAddress="
 				+ destinationAddress + ", destinationTel="
 				+ destinationTel + ", delivaryTime="
-				+ delivaryTime + ", paymentMethod="
+				+ deliveryTime + ", paymentMethod="
 				+ paymentMethod + ", user=" + user
 				+ ", orderItemList=" + orderItemList + "]";
 	}

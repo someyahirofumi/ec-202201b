@@ -51,7 +51,7 @@ public class OrderService {
 		}
 		String text = "ご注文金額:" + String.format("%,d", order.getTotalPrice()) + "円\n"
 				+ "お支払い方法:" + stringPaymentMethod + "\n"
-				+ "配達日時:" + sdf.format(order.getDelivaryTime()) + "\n"
+				+ "配達日時:" + sdf.format(order.getDeliveryTime()) + "\n"
 				+ "ご注文内容:\n";
 		for (OrderItem orderItem : order.getOrderItemList()) {
 			text += orderItem.getItem().getName() + " " + orderItem.getQuantity() + "個\n";

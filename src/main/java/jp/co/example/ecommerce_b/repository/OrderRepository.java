@@ -42,6 +42,9 @@ public class OrderRepository {
 				Order order = new Order();
 				order.setId(nowId);
 				order.setTotalPrice(rs.getInt("total_price"));
+				order.setStatus(rs.getInt("status"));
+				order.setOrderDate(rs.getDate("order_date"));
+				order.setDeliveryTime(rs.getTimestamp("delivery_time"));
 				orderItemList = new ArrayList<>();
 				order.setOrderItemList(orderItemList);
 				orderList.add(order);
@@ -140,7 +143,10 @@ public class OrderRepository {
 	public List<Order> findByOrderd(Integer userId) {
 		String sql = "SELECT"
 				+ " o.id as order_id,"
+				+ " status,"
 				+ " total_price,"
+				+ " order_date,"
+				+ " delivery_time,"
 				+ " order_item_id,"
 				+ " item_id,"
 				+ " i.name as item_name,"

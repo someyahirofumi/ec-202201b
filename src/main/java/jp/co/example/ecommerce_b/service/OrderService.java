@@ -59,8 +59,8 @@ public class OrderService {
 		
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom("pupi.yh@gmail.com");
-		message.setTo("pupi.yh@gmail.com");
-		//message.setTo(order.getDestinationEmail());
+		//message.setTo("@gmail.com");
+		message.setTo(order.getDestinationEmail());
 		message.setSubject("ご注文を承りました。");
 		message.setText(text);
 		try {

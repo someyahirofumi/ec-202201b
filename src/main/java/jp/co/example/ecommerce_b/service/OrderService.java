@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import jp.co.example.ecommerce_b.domain.Order;
 import jp.co.example.ecommerce_b.domain.OrderItem;
+
+import jp.co.example.ecommerce_b.domain.OrderTopping;
 import jp.co.example.ecommerce_b.repository.OrderRepository;
 
 /**
@@ -82,4 +84,64 @@ public class OrderService {
 	public List<Order> getHistory(Integer userId) {
 		return orderRepository.findByOrderd(userId);
 	}
+	
+	/**
+	 * @param order カート追加orderオブジェクト
+	 * ordersテーブルへのinsert
+	 */
+	public void intoCart(Order order) {
+		orderRepository.intoCart(order);
+	}
+	
+	public int getOrderId(Integer userId) {
+		return orderRepository.getOrderId(userId);
+	}
+	public int getOrderId2(String preId) {
+		return orderRepository.getOrderId2(preId);
+	}
+	
+	public void insertItem(OrderItem item) {
+		orderRepository.insertItem(item);
+	}
+	
+	public void insertTopping(List<OrderTopping> list) {
+		orderRepository.insertTopping(list);
+	}
+	
+	public void updateOrder(Order order) {
+		orderRepository.updateOrder(order);
+	}
+	
+	public int getItemId(Integer orderId) {
+		return orderRepository.getItemId(orderId);
+		
+	}
+	
+	/**
+	 * @param userId
+	 * @return カートに追加された商品情報
+	 * ログインユーザー用メソッド
+	 */
+	public Order getCartList(Integer userId){
+		return orderRepository.getCartList(userId);
+	}
+	public Order getNotLoginCartList(String preId){
+		return orderRepository.getNotLoginCartList(preId);
+	}
+	
+	public int getTotalPrice(Integer userId) {
+		return orderRepository.getTotalPrice(userId);
+	}
+	public int getNotLoginTotalPrice(String preId) {
+		return orderRepository.getNotLoginTotalPrice(preId);
+	}
+	
+	public void deleteCart(Integer id) {
+		orderRepository.deleteCart(id);
+		
+	}
+//	
+//	public OrderItem getOrderItem(Integer orderId) {
+//		return orderRepository.getOrderItem(orderId);
+//	}
 }

@@ -8,6 +8,7 @@ public class Order {
 	
 	private Integer id;
 	private Integer userId;
+	private String preId;
 	private Integer status;
 	private Integer totalPrice;
 	private Date orderDate;
@@ -127,6 +128,12 @@ public class Order {
 	}
 	public int getCalcTotalPrice() {
 		return totalPrice+getTax();
+	}
+	public String getPreId() {
+		return preId;
+	}
+	public void setPreId(String preId) {
+		this.preId = preId;
 	}
 
 }

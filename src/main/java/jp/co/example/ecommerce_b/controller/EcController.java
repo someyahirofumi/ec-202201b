@@ -1,27 +1,32 @@
 package jp.co.example.ecommerce_b.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import jp.co.example.ecommerce_b.domain.Item;
 import jp.co.example.ecommerce_b.form.ItemsearchForm;
-import jp.co.example.ecommerce_b.service.ItemService;
+import jp.co.example.ecommerce_b.domain.Topping;
+import jp.co.example.ecommerce_b.form.IntoCartForm;
+import jp.co.example.ecommerce_b.service.Itemservice;
 
 @Controller
 @RequestMapping("")
 public class EcController {
 
 	@Autowired
-	private ItemService itemService;
+	private Itemservice itemService;
 
 	@ModelAttribute
-	public ItemsearchForm setUpForm() {
+	public ItemsearchForm setUpFormItemSearch() {
 		return new ItemsearchForm();
+	}
+
+	@ModelAttribute
+	public IntoCartForm setUpForm() {
+		return new IntoCartForm();
 	}
 
 	@RequestMapping("")
@@ -29,17 +34,38 @@ public class EcController {
 		return "login";
 	}
 
+	/**
+	 * 送られてきたitemIDをもとにして商品を取得するメソッド トッピング全件取得のsqlも実行し、トッピングリストをitemオブジェクトに格納
+	 * 
+	 * @param itemId 商品一覧画面より遷移するときに送られてくる Id
+	 * @param model
+	 * @return 商品詳細画面へフォワード
+	 */
+	@RequestMapping("/toItemDetail")
+	public String toItemDetail(Integer itemId, Model model) {
+//		System.out.println("システム起動");
+//		Item item = service.findByItemId(itemId);
+		Item item = itemService.findByItemId(1);
+
+		List<Topping> toppingList = itemService.toppingFindAll();
+		item.setToppingList(toppingList);
+		model.addAttribute("item", item);
+//		System.out.println(item);
+//		System.out.println(toppingList);
+//		
+		return "item_detail";
+	}
+
 	/*
 	 * 商品全件の一覧
 	 */
 
-	
 	@RequestMapping("/itemList")
 	public String itemList(String code, Model model) {
 
 		// 全件表示
 		if (code == null) {
-			List<Item> itemList = itemService.itemList();
+			List<Item> itemList = itemService.findAllItemList();
 			model.addAttribute("itemList", itemList);
 		} else {
 			List<Item> searchItem = itemService.search(code);
@@ -49,7 +75,7 @@ public class EcController {
 			if (searchItem.isEmpty()) {
 				noList = "該当する商品がありません";
 				model.addAttribute("noList", noList);
-				List<Item> itemList = itemService.itemList();
+				List<Item> itemList = itemService.findAllItemList();
 				model.addAttribute("itemList", itemList);
 				// 検索結果がある場合
 			} else if (!(null == searchItem)) {
@@ -68,24 +94,19 @@ public class EcController {
 			List<Item> itemList = itemService.highList();
 			model.addAttribute("itemList", itemList);
 		} else {
-			List<Item> itemList = itemService.itemList();
+			List<Item> itemList = itemService.findAllItemList();
 			model.addAttribute("itemList", itemList);
 		}
 		return "redirect:/itemList";
-	} 
-	
-	/*@RequestMapping("/itemAlign")
-	public String itemAlign(String listBox, Model model) {
-		if (listBox.equals("low")) {
-			List<Item> itemList = itemService.lowList();
-			model.addAttribute("itemList", itemList);
-		} else if (listBox.equals("high")) {
-			List<Item> itemList = itemService.highList();
-			model.addAttribute("itemList", itemList);
-		} else {
-			List<Item> itemList = itemService.itemList();
-			model.addAttribute("itemList", itemList);
-		}
-		return "redirect:/itemList";
-	} */
+	}
+
+	/*
+	 * @RequestMapping("/itemAlign") public String itemAlign(String listBox, Model
+	 * model) { if (listBox.equals("low")) { List<Item> itemList =
+	 * itemService.lowList(); model.addAttribute("itemList", itemList); } else if
+	 * (listBox.equals("high")) { List<Item> itemList = itemService.highList();
+	 * model.addAttribute("itemList", itemList); } else { List<Item> itemList =
+	 * itemService.itemList(); model.addAttribute("itemList", itemList); } return
+	 * "redirect:/itemList"; }
+	 */
 }

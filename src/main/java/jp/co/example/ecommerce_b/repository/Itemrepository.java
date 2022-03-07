@@ -11,6 +11,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import jp.co.example.ecommerce_b.domain.Item;
+import jp.co.example.ecommerce_b.domain.Topping;
+
+
 
 @Repository
 public class Itemrepository {
@@ -18,13 +21,13 @@ public class Itemrepository {
 	@Autowired
 	private NamedParameterJdbcTemplate template;
 
-	private static final RowMapper<Item> ITEM_ROW_MAPPER = new BeanPropertyRowMapper<>(Item.class);
-
+	private static final RowMapper<Item> ITEM_ROW_MAPPER=new BeanPropertyRowMapper<>(Item.class);
+	private static final RowMapper<Topping> TOPPING_ROW_MAPPER=new BeanPropertyRowMapper<>(Topping.class);
 	/**
 	 * 全件検索 全商品一覧の表示
 	 */
 
-	public List<Item> findAll() {
+	public List<Item> findAllItemList() {
 		String sql = "SELECT id,name,description,price_m,price_l,image_path FROM items";
 		List<Item> itemList=template.query(sql, ITEM_ROW_MAPPER);
 		return itemList;
@@ -38,6 +41,30 @@ public class Itemrepository {
 		List<Item> lowList=template.query(sql, ITEM_ROW_MAPPER);
 		return lowList;
 		
+	}
+	
+	
+	
+	/**itemIdを渡してそれをもとにitemsテーブルを検索
+	 * @param itemId
+	 * @return Idをもとに検索した結果の商品情報
+	 */
+	public Item findByItemId(Integer itemId) {
+		
+		String sql = "SELECT id,name,description,price_m,price_l,image_path FROM items WHERE id=:itemId;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("itemId", itemId);
+		Item item = template.queryForObject(sql, param, ITEM_ROW_MAPPER);
+		return item;
+		
+	}
+	
+	/**トッピング全件を取得し、リストにしてreturnするメソッド
+	 * @return　全トッピングリスト
+	 */
+	public List<Topping> findAll(){
+		String sql = "SELECT id,name,price_m,price_l FROM toppings ; ";
+		List<Topping> list=template.query(sql, TOPPING_ROW_MAPPER);
+		return list;
 	}
 	
 	

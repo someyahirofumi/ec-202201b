@@ -1,15 +1,91 @@
 package jp.co.example.ecommerce_b.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import jp.co.example.ecommerce_b.domain.Item;
+import jp.co.example.ecommerce_b.form.ItemsearchForm;
+import jp.co.example.ecommerce_b.service.ItemService;
 
 @Controller
 @RequestMapping("")
 public class EcController {
-	
+
+	@Autowired
+	private ItemService itemService;
+
+	@ModelAttribute
+	public ItemsearchForm setUpForm() {
+		return new ItemsearchForm();
+	}
+
 	@RequestMapping("")
 	public String index() {
 		return "login";
 	}
 
+	/*
+	 * 商品全件の一覧
+	 */
+
+	
+	@RequestMapping("/itemList")
+	public String itemList(String code, Model model) {
+
+		// 全件表示
+		if (code == null) {
+			List<Item> itemList = itemService.itemList();
+			model.addAttribute("itemList", itemList);
+		} else {
+			List<Item> searchItem = itemService.search(code);
+			model.addAttribute("code", code);
+			String noList = "null";
+			// 検索結果がない場合
+			if (searchItem.isEmpty()) {
+				noList = "該当する商品がありません";
+				model.addAttribute("noList", noList);
+				List<Item> itemList = itemService.itemList();
+				model.addAttribute("itemList", itemList);
+				// 検索結果がある場合
+			} else if (!(null == searchItem)) {
+				model.addAttribute("searchItem", searchItem);
+			}
+		}
+		return "item_list_curry";
+	}
+
+	@RequestMapping("/itemAlign")
+	public String itemAlign(String listBox, Model model, String code) {
+		if (listBox.equals("low")) {
+			List<Item> itemList = itemService.search1(code);
+			model.addAttribute("itemList", itemList);
+		} else if (listBox.equals("high")) {
+			List<Item> itemList = itemService.highList();
+			model.addAttribute("itemList", itemList);
+		} else {
+			List<Item> itemList = itemService.itemList();
+			model.addAttribute("itemList", itemList);
+		}
+		return "redirect:/itemList";
+	} 
+	
+	/*@RequestMapping("/itemAlign")
+	public String itemAlign(String listBox, Model model) {
+		if (listBox.equals("low")) {
+			List<Item> itemList = itemService.lowList();
+			model.addAttribute("itemList", itemList);
+		} else if (listBox.equals("high")) {
+			List<Item> itemList = itemService.highList();
+			model.addAttribute("itemList", itemList);
+		} else {
+			List<Item> itemList = itemService.itemList();
+			model.addAttribute("itemList", itemList);
+		}
+		return "redirect:/itemList";
+	} */
 }

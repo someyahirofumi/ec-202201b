@@ -24,6 +24,10 @@ public class Itemrepository {
 	private static final RowMapper<Topping> TOPPING_ROW_MAPPER=new BeanPropertyRowMapper<>(Topping.class);
 	
 	
+	/**itemIdを渡してそれをもとにitemsテーブルを検索
+	 * @param itemId
+	 * @return Idをもとに検索した結果の商品情報
+	 */
 	public Item findByItemId(Integer itemId) {
 		
 		String sql = "SELECT id,name,description,price_m,price_l,image_path FROM items WHERE id=:itemId;";
@@ -33,6 +37,9 @@ public class Itemrepository {
 		
 	}
 	
+	/**トッピング全件を取得し、リストにしてreturnするメソッド
+	 * @return　全トッピングリスト
+	 */
 	public List<Topping> findAll(){
 		String sql = "SELECT id,name,price_m,price_l FROM toppings ; ";
 		List<Topping> list=template.query(sql, TOPPING_ROW_MAPPER);

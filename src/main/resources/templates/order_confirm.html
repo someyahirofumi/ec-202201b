@@ -235,17 +235,19 @@
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col-sm-12" th:each="deliveryTime,status : ${deliveryTimeMap}">
-                          <label class="radio-inline">
-		                        <input
-		                          type="radio"
-		                          th:field="*{deliveryTime}"
-		                          th:value="${deliveryTime.value}"
-		                          th:checked="${status.index eq 0}"
-		                        />
-                            <span th:text="${deliveryTime.key}">10時</span>
-                          </label>
-                          <th:block th:if="${status.count} == 3"><br></th:block>
+                        <div class="col-sm-12">
+	                        <th:block th:each="deliveryTime,status : ${deliveryTimeMap}">
+	                          <label class="radio-inline">
+			                        <input
+			                          type="radio"
+			                          th:field="*{deliveryTime}"
+			                          th:value="${deliveryTime.value}"
+			                          th:checked="${status.index eq 0}"
+			                        />
+	                            <span th:text="${deliveryTime.key}">10時</span>
+	                          </label>
+		                        <br th:if="${status.count % 3 == 0}"/>
+	                        </th:block>
                         </div>
                       </div>
                     </div>

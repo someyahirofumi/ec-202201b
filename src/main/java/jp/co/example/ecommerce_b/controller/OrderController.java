@@ -149,4 +149,9 @@ public class OrderController {
 	public String complete() {
 		return "order_finished";
 	}
+	
+	@RequestMapping("/history")
+	public String showHistrory() {
+		return "order_history";
+	}
 }

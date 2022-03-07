@@ -136,4 +136,35 @@ public class OrderRepository {
 		
 		template.update(sql, param);
 	}
+	
+	public List<Order> findByOrderd(Integer userId) {
+		String sql = "SELECT"
+				+ " o.id as order_id,"
+				+ " total_price,"
+				+ " order_item_id,"
+				+ " item_id,"
+				+ " i.name as item_name,"
+				+ " i.price_M as item_price_M,"
+				+ " i.price_L as item_price_L,"
+				+ " image_path,"
+				+ " quantity,"
+				+ " size,"
+				+ " topping_id,"
+				+ " t.name as topping_name,"
+				+ " t.price_M as topping_price_M,"
+				+ " t.price_L as topping_price_L"
+				+ " FROM orders as o"
+				+ " LEFT OUTER JOIN order_items as oi ON o.id = oi.order_id"
+				+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
+				+ " LEFT OUTER JOIN items as i ON oi.item_id=i.id"
+				+ " LEFT OUTER JOIN toppings as t ON ot.topping_id=t.id"
+				+ " WHERE user_id=:userId AND status!=0 AND status!=9";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+		
+		List<Order> orderList = template.query(sql, param, ORDER_ORDERITEM_ORDERTOPPING_EXTRACTOR);
+		if (orderList.isEmpty()) {
+			return null;
+		}
+		return orderList;
+	}
 }

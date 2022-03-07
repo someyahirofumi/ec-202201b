@@ -3,7 +3,7 @@ package jp.co.example.ecommerce_b.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jp.co.example.ecommerce_b.domain.User;
+import jp.co.example.ecommerce_b.domain.Users;
 import jp.co.example.ecommerce_b.form.UserForm;
 import jp.co.example.ecommerce_b.service.UserService;
 
@@ -77,8 +77,9 @@ public class UserController {
 			return toRegisterUser();
 		}
 		
+		
 		//上記の確認後、不備がなければ登録処理を行う。
-		User user = new User();
+		Users user = new Users();
 		
 		user.setName(form.getName());
 		user.setEmail(form.getEmail());
@@ -130,9 +131,22 @@ public class UserController {
 	 */
 	@RequestMapping("/login")
 	public String Login(String email,String password,Model model) {
+		
+		
+		
 		//入力されたメールアドレス、パスワードからユーザー情報を検索
 		//検索結果が０件のとき、エラーメッセージを表示
-		if(userservice.Login(email, password).isEmpty()) {
+		
+		//入力されたパスワードの値とハッシュ化されたパスワードの値の一致を確認する
+	    BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
+	    
+	    
+	    //if(bcpe.matches(password, userservice.searchPassword(email))) {
+	    	
+	    //}
+	    
+		if(userservice.Login(email, password) == null) {
+			System.out.println("失敗");
 			model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
 			return toLogin();
 		}
@@ -149,7 +163,9 @@ public class UserController {
 		
 		
 		//仮で注文一覧画面を表示
-		return "/item_list_curry";
+		//return "/item_list_curry";
+		System.out.println("成功");
+		return "/login";
 	}
 }
 

@@ -162,9 +162,10 @@ public class OrderController {
 		//セッションからuserIdを取得
 		Integer userId = (Integer) session.getAttribute("userId");
 		
-		List<Order> orderList = orderService.getHistory(1); 
+		//List<Order> orderList = orderService.getHistory(1);
+		List<Order> orderList = orderService.getHistory(userId);
 		model.addAttribute("orderList", orderList);
-		System.out.println(orderList);
+		//System.out.println(orderList);
 		return "order_history";
 	}
 }

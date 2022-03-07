@@ -123,6 +123,11 @@ public class OrderRepository {
 		return orderList.get(0);
 	}
 	
+	/**
+	 * 注文テーブルの宛先情報とステータスを更新する
+	 * 
+	 * @param order
+	 */
 	public void update(Order order) {
 		String sql = "UPDATE orders SET"
 				+ " status=:status,"
@@ -140,6 +145,12 @@ public class OrderRepository {
 		template.update(sql, param);
 	}
 	
+	/**
+	 * 注文された履歴を検索する
+	 * 
+	 * @param userId
+	 * @return
+	 */
 	public List<Order> findByOrderd(Integer userId) {
 		String sql = "SELECT"
 				+ " o.id as order_id,"

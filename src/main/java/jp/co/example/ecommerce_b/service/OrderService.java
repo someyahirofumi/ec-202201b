@@ -36,6 +36,7 @@ public class OrderService {
 	}
 	
 	/**
+	 * アップデート後にメールを送信する
 	 * 
 	 * @param order 宛先が格納された注文情報
 	 */
@@ -72,6 +73,12 @@ public class OrderService {
 		System.out.println("メールを送信しました");
 	}
 	
+	/**
+	 * 注文履歴を取得
+	 * 
+	 * @param userId
+	 * @return
+	 */
 	public List<Order> getHistory(Integer userId) {
 		return orderRepository.findByOrderd(userId);
 	}

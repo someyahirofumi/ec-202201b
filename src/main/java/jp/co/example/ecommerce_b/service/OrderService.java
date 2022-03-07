@@ -1,7 +1,7 @@
 package jp.co.example.ecommerce_b.service;
 
 import java.text.SimpleDateFormat;
-
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -70,5 +70,9 @@ public class OrderService {
 			e.printStackTrace();
 		}
 		System.out.println("メールを送信しました");
+	}
+	
+	public List<Order> getHistory(Integer userId) {
+		return orderRepository.findByOrderd(userId);
 	}
 }

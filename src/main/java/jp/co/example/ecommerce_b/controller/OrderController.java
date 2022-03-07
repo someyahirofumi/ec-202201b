@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -150,8 +151,20 @@ public class OrderController {
 		return "order_finished";
 	}
 	
+	/**
+	 * 注文履歴を表示する
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/history")
-	public String showHistrory() {
+	public String showHistrory(Model model) {
+		//セッションからuserIdを取得
+		Integer userId = (Integer) session.getAttribute("userId");
+		
+		List<Order> orderList = orderService.getHistory(1); 
+		model.addAttribute("orderList", orderList);
+		
 		return "order_history";
 	}
 }

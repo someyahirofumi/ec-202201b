@@ -57,7 +57,7 @@ public class OrderController {
 	
 	@RequestMapping("/intoCart")
 	
-	public String intoCart(IntoCartForm form,Model model,Integer itemId) {
+	public String intoCart(IntoCartForm form,Integer priceM,Integer priceL,Model model,Integer itemId) {
 		//動作確認用
 		session.setAttribute("userId", 2);
 		
@@ -74,20 +74,21 @@ public class OrderController {
 		
 		//小計金額計算(カートの状態、ログイン状態は関係なしの共通処理)
 		int total =0;
-		if(form.getPriceM() != null) {
-			total += form.getPriceM();
+		if(form.getSize() =='M') {
+			total += priceM;
 			//トッピングが選択されている場合の処理
 			if(!(form.getToppingId().isEmpty())) {
 			total += form.getToppingId().size()*200;
 			}
-			item.setSize('M');
-		}else if(form.getPriceL() != null) {
-			total += form.getPriceL();
+			
+		}else if(form.getSize() =='L') {
+			total += priceL;
 			if(!(form.getToppingId().isEmpty())) {
 			total += form.getToppingId().size()*300;
 			}
-			item.setSize('L');
+		
 		}
+		item.setSize(form.getSize());
 		total *= form.getQuantity();
 		//orderオブジェクトに小計金額とステータスをセット
 		order.setTotalPrice(total);
@@ -165,6 +166,7 @@ public class OrderController {
 		item.setQuantity(form.getQuantity());
 		//orderテーブルへのinsert処理
 		orderService.insertItem(item);
+		if(!(form.getToppingId().isEmpty())) {
 		//formのトッピングリストから情報を一件ずつ取得し、新たなリストに格納
 		
 		int itemIdd = orderService.getItemId(orderId);
@@ -177,9 +179,10 @@ public class OrderController {
 			}
 		//トッピングが選択されていた場合にorderToppingテーブルにinsert処理
 			
-		if (!toppingList.isEmpty()) {
+		
 		orderService.insertTopping(toppingList);
 		}
+		
 		return toCartList(model);
 	}
 	
@@ -202,9 +205,10 @@ public class OrderController {
 			order=orderService.getNotLoginCartList((String)session.getAttribute("preId"));
 		}
 		//orderListをrequestスコープに格納(orderList)
-		if(order == null) {
+		if(order.getOrderItemList().isEmpty()) {
 			model.addAttribute("cartNullMessage","カートに商品がありません");
 		}else {
+			System.out.println(order.getOrderItemList());
 		model.addAttribute("cart",order);
 		}
 		return "cart_list";

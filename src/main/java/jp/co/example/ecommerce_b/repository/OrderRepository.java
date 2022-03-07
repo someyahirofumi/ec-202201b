@@ -217,22 +217,7 @@ public class OrderRepository {
 		
 	}
 	
-//	//削除ボタン押下時処理に使用
-//	public OrderItem getOrderItem(Integer orderId) {
-//		String sql = "select * from order_items where id=:orderId;";
-//		String sql2="select * from order_toppings where order_item_id=:orderId;";
-//				
-//		SqlParameterSource param = new MapSqlParameterSource().addValue("orderId",orderId);
-//		
-//		List<OrderItem> list = template.query(sql,param,ORDERITEM_ROW_MAPPER);
-//		List<Topping> toppingList =template.query(sql2,TOPPING_ROW_MAPPER);
-//		if (list.isEmpty()) {
-//			return null;
-//		} else {
-//		
-//			return list.get(0);
-//		}
-//	}
+
 	
 	//ログインユーザー用カートリスト取得メソッド
 	//全てのテーブルのデータが入っていないと動かない＝ダミーデータを入れておく必要がある？トッピングのテーブル検索は分ける必要あり？
@@ -245,13 +230,14 @@ public class OrderRepository {
 						+ " orders as o"
 						+ " LEFT OUTER JOIN order_items as oi ON o.id=oi.order_id"
 						+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
-						+ " INNER JOIN items as i ON oi.item_id= i.id"
-						+ " INNER JOIN toppings as t ON ot.topping_id=t.id"
+						+ " LEFT OUTER JOIN items as i ON oi.item_id= i.id"
+						+ " LEFT OUTER JOIN toppings as t ON ot.topping_id=t.id"
 						+ " WHERE"
 						+ " o.user_id=:userId AND o.status=0;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
 		List<Order> cartList=new ArrayList<>();
 		cartList= template.query(sql, param,ORDER_ORDERITEM_ORDERTOPPING_EXTRACTOR);
+		
 		 if (cartList.isEmpty()) {
 				return null;
 			} else {
@@ -269,8 +255,8 @@ public class OrderRepository {
 						+ " orders as o"
 						+ " LEFT OUTER JOIN order_items as oi ON o.id=oi.order_id"
 						+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
-						+ " INNER JOIN items as i ON oi.item_id= i.id"
-						+ " INNER JOIN toppings as t ON ot.topping_id=t.id"
+						+ " LEFT OUTER JOIN items as i ON oi.item_id= i.id"
+						+ " LEFT OUTER JOIN toppings as t ON ot.topping_id=t.id"
 						+ " WHERE"
 						+ " o.pre_id=:preId AND o.status=0;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("preId", preId);

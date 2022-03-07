@@ -49,11 +49,11 @@ public class EcController {
 	 * @return　商品詳細画面へフォワード
 	 */
 	@RequestMapping("/toItemDetail")
-	public String toItemDetail(Integer itemId,Model model) {
+	public String toItemDetail(IntoCartForm form,Integer itemId,Model model) {
 //		System.out.println("システム起動");
 //		Item item = service.findByItemId(itemId);
 		Item item = service.findByItemId(1);
-		
+		form.setSize('M');
 		List<Topping> toppingList = service.toppingFindAll();
 		item.setToppingList(toppingList);
 		model.addAttribute("item",item);

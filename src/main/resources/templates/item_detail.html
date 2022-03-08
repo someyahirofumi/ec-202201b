@@ -59,7 +59,7 @@
         <!-- /.container-fluid -->
       </nav>
 
-      <form action="cart_list.html">
+      <form action="cart_list.html" th:action="@{/order/intoCart?itemId=}+${item.id}" th:object="${intoCartForm}">
         <div class="row">
           <div class="col-xs-offset-2 col-xs-8">
             <h3 class="text-center">商品詳細</h3>
@@ -74,7 +74,7 @@
 
               <div class="col-xs-5">
                 <div class="bs-component">
-                  <h4 th:text=${item.name}>じゃがバターベーコン</h4>
+                  <h4 th:text=${item.name} th:value="${item.id}" th:field="*{itemId}">じゃがバターベーコン</h4>
                   <br />
                   <br />
                   <p th:text="${item.description}">
@@ -91,20 +91,25 @@
                     <div class="col-sm-12">
                       <label for="inputResponsibleCompany">サイズ</label>
                     </div>
-                    <div class="col-sm-12">
-                      <label class="radio-inline">
+                    <div class="col-sm-12" >
+                      <label class="radio-inline"value="M"
+                          th:field="*{size}" >
                         <input
                           type="radio"
                           name="responsibleCompany"
                           checked="checked"
+                          
+                          th:field="*{priceM}" th:value="${item.priceM}" 
+                          id="sizeM"
+                       
                         />
                         <span class="price" >&nbsp;М&nbsp;</span
-                        >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceM,4,'COMMA')}+'円(税抜)'">1,380円(税抜)</span>
+                        >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceM,4,'COMMA')}"  id="sizeMprice" >1,380</span>円(税抜)
                       </label>
-                      <label class="radio-inline">
-                        <input type="radio" name="responsibleCompany" />
-                        <span class="price" >&nbsp;Ｌ</span
-                        >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceL,4,'COMMA')}+'円(税抜)'">2,380円(税抜)</span> 
+                      <label class="radio-inline" id="sizeL" th:field="*{size}">
+                        <input type="radio" name="responsibleCompany" value="L"  th:field="*{priceL}" th:value="${item.priceL}">
+                        <span class="price" >&nbsp;Ｌ</span>
+                        >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceL,4,'COMMA')}" id="sizeLprice" th:value="${item.priceL}" th:field="*{priceL}">2,380</span> 円(税抜)
                       </label>
                     </div>
                   </div>
@@ -149,7 +154,7 @@
                         <input type="checkbox" value="" />あらびきソーセージ
                       </label>  -->
                        <label class="checkbox-inline" th:each="toppings:${item.toppingList}">
-                      <input type="checkbox" th:value="${toppings.name}" th:text="${toppings.name}">
+                      <input type="checkbox" name="topping" class ="toppingCount" th:value="${toppings.id}" th:text="${toppings.name}" th:field="*{toppingId}"  >
                       </label> 
                     </div>
                   </div>
@@ -168,7 +173,7 @@
                         for="inputError"
                         >数量を選択してください</label
                       >
-                      <select name="area" class="form-control">
+                      <select name="area" class="form-control" th:field="*{quantity}">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -190,8 +195,8 @@
             <br />
             <div class="row">
               <div class="col-xs-offset-2 col-xs-10">
-                <div class="form-group">
-                  <span id="total-price">この商品金額：38,000 円(税抜)</span>
+                <div class="form-group"><!-- -->
+                  この商品金額：<span id="total-price" th:text="${#numbers.formatInteger(item.priceM,4,'COMMA')}"   >0 </span>円(税抜)
                 </div>
               </div>
             </div>
@@ -213,7 +218,8 @@
       </form>
     </div>
     <!-- end container -->
+    <script th:src="@{/js/changeTotalPrice.js}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
   </body>
 </html>

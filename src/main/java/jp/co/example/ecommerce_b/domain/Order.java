@@ -1,6 +1,6 @@
 package jp.co.example.ecommerce_b.domain;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -8,14 +8,16 @@ public class Order {
 	
 	private Integer id;
 	private Integer userId;
+	private String preId;
 	private Integer status;
 	private Integer totalPrice;
 	private Date orderDate;
 	private String destinationName;
 	private String destinationEmail;
+	private String destinationZipcode;
 	private String destinationAddress;
 	private String destinationTel;
-	private Timestamp delivaryTime;
+	private Timestamp deliveryTime;
 	private Integer paymentMethod;
 	private Users user;
 	private List<OrderItem> orderItemList;
@@ -61,6 +63,13 @@ public class Order {
 	public void setDestinationEmail(String destinationEmail) {
 		this.destinationEmail = destinationEmail;
 	}
+	public String getDestinationZipcode() {
+		return destinationZipcode;
+	}
+	public void setDestinationZipcode(
+			String destinationZipcode) {
+		this.destinationZipcode = destinationZipcode;
+	}
 	public String getDestinationAddress() {
 		return destinationAddress;
 	}
@@ -73,11 +82,11 @@ public class Order {
 	public void setDestinationTel(String destinationTel) {
 		this.destinationTel = destinationTel;
 	}
-	public Timestamp getDelivaryTime() {
-		return delivaryTime;
+	public Timestamp getDeliveryTime() {
+		return deliveryTime;
 	}
-	public void setDelivaryTime(Timestamp delivaryTime) {
-		this.delivaryTime = delivaryTime;
+	public void setDeliveryTime(Timestamp deliveryTime) {
+		this.deliveryTime = deliveryTime;
 	}
 	public Integer getPaymentMethod() {
 		return paymentMethod;
@@ -97,20 +106,34 @@ public class Order {
 	public void setOrderItemList(List<OrderItem> orderItemList) {
 		this.orderItemList = orderItemList;
 	}
+	
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", userId=" + userId + ", status=" + status + ", totalPrice=" + totalPrice
-				+ ", orderDate=" + orderDate + ", destinationName=" + destinationName + ", destinationEmail="
-				+ destinationEmail + ", destinationAddress=" + destinationAddress + ", destinationTel=" + destinationTel
-				+ ", delivaryTime=" + delivaryTime + ", paymentMethod=" + paymentMethod + ", user=" + user
+		return "Order [id=" + id + ", userId=" + userId
+				+ ", status=" + status + ", totalPrice="
+				+ totalPrice + ", orderDate=" + orderDate
+				+ ", destinationName=" + destinationName
+				+ ", destinationEmail=" + destinationEmail
+				+ ", destinationZipcode="
+				+ destinationZipcode
+				+ ", destinationAddress="
+				+ destinationAddress + ", destinationTel="
+				+ destinationTel + ", delivaryTime="
+				+ deliveryTime + ", paymentMethod="
+				+ paymentMethod + ", user=" + user
 				+ ", orderItemList=" + orderItemList + "]";
 	}
-	
 	public int getTax() {
 		return totalPrice/10;
 	}
 	public int getCalcTotalPrice() {
 		return totalPrice+getTax();
+	}
+	public String getPreId() {
+		return preId;
+	}
+	public void setPreId(String preId) {
+		this.preId = preId;
 	}
 
 }

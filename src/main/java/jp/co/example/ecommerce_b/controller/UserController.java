@@ -91,7 +91,7 @@ public class UserController {
 		
 		userservice.resgisterUser(user);
 		
-		return "/user/";
+		return "/itemList";
 	}
 	
 	/**
@@ -158,9 +158,20 @@ public class UserController {
 		
 		
 		//仮で注文一覧画面を表示
-		return "/item_list_curry";
-		
-		
+		return "/itemlist";
+	}
+		/**
+		 * ログアウト処理
+		 * 
+		 * 
+		 * @return ユーザー情報
+		 * session スコープに存在するユーザー情報を削除し、ログイン画面に遷移する。
+		 * 
+		 */
+		@RequestMapping("/logout")
+		public String Logout() {
+		session.removeAttribute("userInfo");
+		return "/user/";
 	}
 }
 

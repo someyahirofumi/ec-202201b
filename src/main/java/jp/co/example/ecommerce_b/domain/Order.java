@@ -19,7 +19,7 @@ public class Order {
 	private String destinationTel;
 	private Timestamp deliveryTime;
 	private Integer paymentMethod;
-	private User user;
+	private Users user;
 	private List<OrderItem> orderItemList;
 	public Integer getId() {
 		return id;
@@ -94,10 +94,10 @@ public class Order {
 	public void setPaymentMethod(Integer paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
-	public User getUser() {
+	public Users getUser() {
 		return user;
 	}
-	public void setUser(User user) {
+	public void setUser(Users user) {
 		this.user = user;
 	}
 	public List<OrderItem> getOrderItemList() {

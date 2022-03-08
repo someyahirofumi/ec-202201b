@@ -26,11 +26,8 @@ public class FavoriteService {
 		return favoriteRepository.findByUserIdAndItemId(userId, null);
 	}
 	
-	public Favorite confirmFavorite(Integer userId, Integer itemId) {
+	public List<Favorite> confirmFavorite(Integer userId, Integer itemId) {
 		List<Favorite> favoriteList = favoriteRepository.findByUserIdAndItemId(userId, itemId);
-		if (favoriteList.isEmpty()) {
-			return null;
-		}
-		return favoriteList.get(0);
+		return favoriteList;
 	}
 }

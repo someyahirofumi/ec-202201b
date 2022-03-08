@@ -1,15 +1,21 @@
 package jp.co.example.ecommerce_b.controller;
 
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import jp.co.example.ecommerce_b.domain.Favorite;
 import jp.co.example.ecommerce_b.domain.Item;
 import jp.co.example.ecommerce_b.form.ItemsearchForm;
 import jp.co.example.ecommerce_b.domain.Topping;
 import jp.co.example.ecommerce_b.form.IntoCartForm;
+import jp.co.example.ecommerce_b.service.FavoriteService;
 import jp.co.example.ecommerce_b.service.Itemservice;
 
 @Controller
@@ -18,6 +24,12 @@ public class EcController {
 
 	@Autowired
 	private Itemservice itemService;
+	
+	@Autowired
+	private FavoriteService favoriteService;
+	
+	@Autowired
+	private HttpSession session;
 
 	@ModelAttribute
 	public ItemsearchForm setUpFormItemSearch() {
@@ -49,6 +61,11 @@ public class EcController {
 
 		List<Topping> toppingList = itemService.toppingFindAll();
 		item.setToppingList(toppingList);
+		
+		session.setAttribute("userId", 1);
+		Integer userId = (Integer) session.getAttribute("userId");
+		List<Favorite> favoriteList = favoriteService.confirmFavorite(userId, itemId);
+		model.addAttribute("favoriteList", favoriteList);
 		model.addAttribute("item", item);
 //		System.out.println(item);
 //		System.out.println(toppingList);

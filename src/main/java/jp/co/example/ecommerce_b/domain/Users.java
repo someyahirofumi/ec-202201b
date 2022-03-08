@@ -8,7 +8,7 @@ package jp.co.example.ecommerce_b.domain;
  * @author ishida fuya
  *
  */
-public class User {
+public class Users {
 	
   /** ID */
   private Integer id;

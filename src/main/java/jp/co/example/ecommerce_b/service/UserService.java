@@ -3,10 +3,11 @@ package jp.co.example.ecommerce_b.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jp.co.example.ecommerce_b.domain.User;
+import jp.co.example.ecommerce_b.domain.Users;
 import jp.co.example.ecommerce_b.repository.UserRepository;
 
 /**
@@ -28,17 +29,26 @@ public class UserService {
 	 * @author ishida fuya
 	 *
 	 */
-	public List<User> emailCheck(String email) {
+	public List<Users> emailCheck(String email) {
 		return userrepository.emailCheck(email);
 	}
-	
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
 	/**
 	 * ユーザー情報の追加処理
 	 * 
 	 * 
 	 *
 	 */
-	public User resgisterUser(User user) {
+	public Users resgisterUser(Users user) {
+		
+		//パスワードのハッシュ化を行う
+		System.out.println(user.getPassword());
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		System.out.println(user.getPassword());
+		
 		return userrepository.registerUser(user);
 	}
 	
@@ -50,10 +60,23 @@ public class UserService {
 	 * @return ユーザー情報
 	 *
 	 */
-	public List<User> Login(String email,String password) {
+	public Users Login(String email,String password) {
 		
 		return userrepository.Login(email,password);
 	}
+	
+	/**
+	 * 
+	 * メールアドレスからパスワード情報を検索
+	 * 
+	 * @param email
+	 * @return パスワード情報
+	 *
+	 */
+	//public List<Users> searchPassword(String email) {
+		
+	//	return userrepository.searchPassword(email);
+	//}
 
 
 }

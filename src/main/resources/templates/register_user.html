@@ -98,10 +98,10 @@
                   </label>
                   </label
                   >
-                  <input type="button" value="住所検索" /><span  th:errors="*{zipcode}" style="color: red;"></span>
+                  <input type="button" id = "zipcode_btn" value="住所検索" /><span  th:errors="*{zipcode}" style="color: red;"></span>
                   <input
                     type="text"
-                    id="inputZipcode"
+                    id="zipcode"
                     class="form-control"
                     placeholder="Zipcode"
                     th:field="*{zipcode}"
@@ -110,10 +110,10 @@
                 <div class="form-group">
                   <label for="inputAddress">住所:<span  th:errors="*{address}" style="color: red;"></span>
                   </label>
-                  
+                  <div id="zipcode_msg" style="color: red"></div>
                   <input
                     type="text"
-                    id="inputAddress"
+                    id="address"
                     class="form-control"
                     placeholder="Address"
                     th:field="*{address}"
@@ -166,5 +166,7 @@
     <!-- end container -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/zipcode.js}"></script>
   </body>
 </html>

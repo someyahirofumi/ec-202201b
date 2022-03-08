@@ -56,8 +56,8 @@ public class EcController {
 	@RequestMapping("/toItemDetail")
 	public String toItemDetail(Integer itemId, Model model) {
 //		System.out.println("システム起動");
-//		Item item = service.findByItemId(itemId);
-		Item item = itemService.findByItemId(1);
+		Item item = itemService.findByItemId(itemId);
+		//Item item = itemService.findByItemId(1);
 
 		List<Topping> toppingList = itemService.toppingFindAll();
 		item.setToppingList(toppingList);

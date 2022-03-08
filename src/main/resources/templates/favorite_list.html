@@ -29,7 +29,7 @@
               <span class="icon-bar"></span> <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="item_list_pizza.html">
+            <a class="navbar-brand" href="item_list_pizza.html" th:href="@{/itemList}">
               <!-- 企業ロゴ -->
               <img
                 alt="main log"
@@ -46,7 +46,7 @@
             id="bs-example-navbar-collapse-1"
           >
             <p class="navbar-text navbar-right">
-              <a href="cart_list.html" class="navbar-link">ショッピングカート</a
+              <a href="cart_list.html" th:href="@{order/toCartList}" class="navbar-link">ショッピングカート</a
               >&nbsp;&nbsp;
               <a href="order_history.html" th:href="@{/order/history}" class="navbar-link">注文履歴</a
               >&nbsp;&nbsp;
@@ -78,13 +78,15 @@
               <tr th:each="favorite : ${favoriteList}">
                 <th class="row">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                      <img
-                        src="../static/img_curry/1.jpg"
-                        th:src="@{/img_curry/} + ${favorite.item.imagePath}"
-                        class="img-responsive img-rounded"
-                        width="200"
-                        height="600"
-                      />
+                      <a th:href="@{/toItemDetail?itemId=} + ${favorite.item.id}">
+	                      <img
+	                        src="../static/img_curry/1.jpg"
+	                        th:src="@{/img_curry/} + ${favorite.item.imagePath}"
+	                        class="img-responsive img-rounded"
+	                        width="200"
+	                        height="600"
+	                      />
+                      </a>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-left">
                       <p class="lead">商品名：<span th:text="${favorite.item.name}"></span></p>

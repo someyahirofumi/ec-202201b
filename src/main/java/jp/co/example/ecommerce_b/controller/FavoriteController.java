@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.co.example.ecommerce_b.domain.Favorite;
@@ -34,8 +33,8 @@ public class FavoriteController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/add/{itemId}")
-	public String favorite(@PathVariable("itemId") Integer itemId, Model model) {
+	@RequestMapping("/add")
+	public String favorite(Integer itemId, Model model) {
 		session.setAttribute("userId", 1);
 		Integer userId = (Integer) session.getAttribute("userId");
 		if (userId != null && favoriteService.confirmFavorite(userId, itemId).isEmpty()) {
@@ -43,7 +42,7 @@ public class FavoriteController {
 		}
 		//favoriteService.favorite(1, 1);
 		
-		return showList(model);
+		return "redirect:/toItemDetail?itemId=" + itemId;
 	}
 	
 	/**

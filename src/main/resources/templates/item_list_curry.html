@@ -27,9 +27,10 @@
 						<span class="icon-bar"></span> <span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="item_list_pizza.html">
+					<a class="navbar-brand" href="item_list_pizza.html" th:href="@{/itemList}">
 						<!-- 企業ロゴ -->
-						<img alt="main log" src="../static/img_curry/header_logo.png" height="35" />
+						<img alt="main log" src="../static/img_curry/header_logo.png"
+                th:src="@{/img_curry/header_logo.png}" height="35" />
 					</a>
 				</div>
 
@@ -121,11 +122,11 @@
 								<tr>
 							</div>
 							<th>
-								<a href="item_detail.html">
+								<a href="item_detail.html" th:href="@{/toItemDetail?itemId=} + ${search.id}">
 									<img src="../static/img_curry/1.jpg"
 										class="img-responsive img-rounded item-img-center" width="150" height="150"
 										th:src="@{/img_curry/}+${search.imagePath}" /> </a><br />
-								<a href="item_detail.html" th:text="${search.name}">じゃがバターベーコン</a><br />
+								<a href="item_detail.html" th:text="${search.name}" th:href="@{/toItemDetail?itemId=} + ${search.id}">じゃがバターベーコン</a><br />
 								<span class="price">M</span>
 								<span th:text="${search.priceM}"></span>&nbsp;&nbsp;円(税抜)<br />
 								<span class="price">L</span>
@@ -145,11 +146,11 @@
 								<tr>
 							</div>
 							<th>
-								<a href="item_detail.html">
+								<a href="item_detail.html" th:href="@{/toItemDetail?itemId=} + ${item.id}">
 									<img src="../static/img_curry/1.jpg"
 										class="img-responsive img-rounded item-img-center" width="200" height="133"
 										th:src="@{/img_curry/}+${item.imagePath}" /> </a><br />
-								<a href="item_detail.html" th:text="${item.name}">じゃがバターベーコン</a><br />
+								<a href="item_detail.html" th:text="${item.name}" th:href="@{/toItemDetail?itemId=} + ${item.id}">じゃがバターベーコン</a><br />
 								<span class="price">M</span>
 								<span th:text="${item.priceM}"></span>&nbsp;&nbsp;円(税抜)<br />
 								<span class="price">L</span>

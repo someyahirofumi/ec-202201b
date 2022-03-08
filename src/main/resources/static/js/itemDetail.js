@@ -3,6 +3,11 @@
 
 
 $(function() {
+	    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function(e, xhr, options) {
+      xhr.setRequestHeader(header, token);
+    });
 	calc_price();
 	$(".size").on("change", function() {
 
@@ -47,8 +52,7 @@ $(function() {
 		$('[class="toppingCount"]:checked').each(function() {
 			toppingList.push(($(this).val()))
 		});
-		console.log(toppingList);
-		console.log(toppingList.join());
+		
 
 
 

@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -235,7 +235,7 @@ public class OrderRepository {
 	public Order getCartList(Integer userId){
 		String sql = 
 				"SELECT o.id as order_id,o.total_price,oi.id as order_item_id,oi.quantity,oi.size,i.name as item_name,"
-				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,o.status,o.order_date,o.delivery_time,"
+				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,o.status as status,o.order_date,o.delivery_time,"
 						+ " i.id as item_id,i.image_path,t.name as topping_name,t.price_m as topping_price_M,t.price_l as topping_price_L"
 						+ " FROM "
 						+ " orders as o"
@@ -260,7 +260,7 @@ public class OrderRepository {
 	public Order getNotLoginCartList(String preId){
 		String sql = 
 				"SELECT o.id as order_id,o.total_price,oi.id as order_item_id,oi.quantity,oi.size,i.name as item_name,"
-				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,"
+				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,o.status as status,o.order_date,o.delivery_time,"
 						+ " i.id as item_id,i.image_path,t.name as topping_name,t.price_m as topping_price_M,t.price_l as topping_price_L"
 						+ " FROM "
 						+ " orders as o"

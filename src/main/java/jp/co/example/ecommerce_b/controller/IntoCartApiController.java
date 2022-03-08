@@ -32,7 +32,6 @@ public class IntoCartApiController {
 	
 	@RequestMapping(value="/insert",method=RequestMethod.POST)
 	public void insert(Integer priceM,Integer priceL,Integer itemId,char size,String toppingId,Integer quantity) {
-		
 		List<String> toppingIds= Arrays.asList(toppingId.split(","));
 		List<Integer> toIntToppingIds= new ArrayList<>();
 		for(String ids:toppingIds) {

@@ -26,7 +26,8 @@ public class FavoriteController {
 	public String favorite(Integer itemId) {
 		Integer userId = (Integer) session.getAttribute("userId");
 		favoriteService.favorite(userId, itemId);
+		//favoriteService.favorite(1, 1);
 		
-		return "favolite_list";
+		return "favorite_list";
 	}
 }

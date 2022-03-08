@@ -1,5 +1,7 @@
 package jp.co.example.ecommerce_b.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -22,6 +24,7 @@ public class FavoriteRepository {
 	
 	private static final RowMapper<Favorite> FAVORITE_ROW_MAPPER = (rs, i) -> {
 		Favorite favorite = new Favorite();
+		favorite.setId(rs.getInt("id"));
 		favorite.setUserId(rs.getInt("user_id"));
 		favorite.setItemId(rs.getInt("item_id"));
 		Item item = new Item();
@@ -33,10 +36,22 @@ public class FavoriteRepository {
 		return favorite;
 	};
 	
+	public List<Favorite> findByUserId(Integer userId) {
+		String sql = "SELECT f.id,item_id,user_id,name,image_path"
+				+ " FROM favorites as f"
+				+ " JOIN items as i"
+				+ " ON f.item_id=i.id\n"
+				+ " WHERE user_id=:userId ORDER BY f.id DESC";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+		List<Favorite> favoriteList = template.query(sql, param, FAVORITE_ROW_MAPPER);
+		
+		return favoriteList;
+	}
+	
 	public void insert(Integer userId, Integer itemId) {
-		String sql = "INSERT INTO favorites VALUES"
-				+ " (user_id, item_id)"
-				+ " (:userId, :itemId)";
+		String sql = "INSERT INTO favorites"
+				+ "        (user_id, item_id)"
+				+ " VALUES (:userId, :itemId)";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId).addValue("itemId", itemId);
 		
 		template.update(sql, param);

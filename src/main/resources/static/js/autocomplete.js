@@ -6,7 +6,7 @@ $(function(){
     type: 'post',
     dataType: 'json'
   }).done(function(data){
-    $('#autocomplete').autocompete({
+    $('#autocomplete').autocomplete({
       source: data.items
     });
   }).fail(function(){

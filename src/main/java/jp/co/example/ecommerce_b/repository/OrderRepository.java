@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,7 +26,9 @@ import jp.co.example.ecommerce_b.domain.Topping;
  */
 @Repository
 public class OrderRepository {
-
+	/**
+	 * Order、OrderItem、OrderToppingオブジェクトを受け取るためのResultSetExtractor
+	 */
 	private static final ResultSetExtractor<List<Order>> ORDER_ORDERITEM_ORDERTOPPING_EXTRACTOR = (rs) -> {
 		List<Order> orderList = new ArrayList<>();
 		List<OrderItem> orderItemList = null;
@@ -41,6 +44,9 @@ public class OrderRepository {
 				Order order = new Order();
 				order.setId(nowId);
 				order.setTotalPrice(rs.getInt("total_price"));
+				order.setStatus(rs.getInt("status"));
+				order.setOrderDate(rs.getDate("order_date"));
+				order.setDeliveryTime(rs.getTimestamp("delivery_time"));
 				orderItemList = new ArrayList<>();
 				order.setOrderItemList(orderItemList);
 				orderList.add(order);
@@ -83,7 +89,12 @@ public class OrderRepository {
 
 	@Autowired
 	private NamedParameterJdbcTemplate template;
-
+	/**
+	 * 
+	 * @param userId ユーザーID
+	 * @param status 注文状態
+	 * @return 注文情報を持ったOrderオブジェクト
+	 */
 	public Order findByUserIdAndStatus(Integer userId, Integer status) {
 		String sql = "SELECT" + " o.id as order_id," + " total_price," + " order_item_id," + " item_id,"
 				+ " i.name as item_name," + " i.price_M as item_price_M," + " i.price_L as item_price_L,"
@@ -297,4 +308,65 @@ public class OrderRepository {
 	}
 	
 	
+	/**
+	 * 注文テーブルの宛先情報とステータスを更新する
+	 * 
+	 * @param order
+	 */
+	public void update(Order order) {
+		String sql = "UPDATE orders SET"
+				+ " status=:status,"
+				+ " order_date=:orderDate,"
+				+ " destination_name=:destinationName,"
+				+ " destination_email=:destinationEmail,"
+				+ " destination_zipcode=:destinationZipcode,"
+				+ " destination_address=:destinationAddress,"
+				+ " destination_tel=:destinationTel,"
+				+ " delivery_time=:delivaryTime,"
+				+ " payment_method=:paymentMethod"
+				+ " WHERE id=:id";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
+		
+		template.update(sql, param);
+	}
+	
+	/**
+	 * 注文された履歴を検索する
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public List<Order> findByOrderd(Integer userId) {
+		String sql = "SELECT"
+				+ " o.id as order_id,"
+				+ " status,"
+				+ " total_price,"
+				+ " order_date,"
+				+ " delivery_time,"
+				+ " order_item_id,"
+				+ " item_id,"
+				+ " i.name as item_name,"
+				+ " i.price_M as item_price_M,"
+				+ " i.price_L as item_price_L,"
+				+ " image_path,"
+				+ " quantity,"
+				+ " size,"
+				+ " topping_id,"
+				+ " t.name as topping_name,"
+				+ " t.price_M as topping_price_M,"
+				+ " t.price_L as topping_price_L"
+				+ " FROM orders as o"
+				+ " LEFT OUTER JOIN order_items as oi ON o.id = oi.order_id"
+				+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
+				+ " LEFT OUTER JOIN items as i ON oi.item_id=i.id"
+				+ " LEFT OUTER JOIN toppings as t ON ot.topping_id=t.id"
+				+ " WHERE user_id=:userId AND status!=0 AND status!=9";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+		
+		List<Order> orderList = template.query(sql, param, ORDER_ORDERITEM_ORDERTOPPING_EXTRACTOR);
+		if (orderList.isEmpty()) {
+			return null;
+		}
+		return orderList;
+	}
 }

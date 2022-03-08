@@ -71,7 +71,7 @@
 								</div>
 							</div>
 							<div class="text-center">
-								<button type="submit" value="検索" class="btn btn-primary">
+								<button type="submit" value="検索" class="btn btn-primary" id="submit_btn">
 									検索
 								</button>
 								<button type="reset" value="クリア" class="btn btn-default">
@@ -86,12 +86,14 @@
 
 		<!--並び順の表示-->
 		<form th:action="@{/itemAlign}" method="POST">
+		<div id="select_menu">
 		<select id="listBox" name="listBox">
 		<option value="none">---</option>
 		<option value="low">価格が安い順</option>
 		<option value="high">価格が高い順</option>
 		</select>
 			<button type="submit">並べ替え</button>
+		</div>	
 		</form>
 
 		<!-- table -->
@@ -110,6 +112,7 @@
 				<!--全件一覧のリンク-->
 				<div style="text-align: right;"><a th:href="@{/itemList}">全商品一覧へ</a></div>
 				検索結果：<span id="result" th:text="${code}"></span><br>
+				検索数：<span id="count" th:text="${searchCount}"></span>件<br>
 				<!--検索結果がないときのメッセージ-->
 				<span th:text="${noList}" style="font-weight:bold;color:orange;font-size:150%"></span>
 				

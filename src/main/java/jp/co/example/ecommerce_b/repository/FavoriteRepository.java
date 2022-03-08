@@ -61,4 +61,11 @@ public class FavoriteRepository {
 		
 		template.update(sql, param);
 	}
+	
+	public void delete(Integer userId, Integer itemId) {
+		String sql = "DELETE FROM favorites WHERE user_id=:userId AND item_id=:itemId";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId).addValue("itemId", itemId);
+		
+		template.update(sql, param);
+	}
 }

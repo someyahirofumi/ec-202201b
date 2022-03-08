@@ -30,4 +30,8 @@ public class FavoriteService {
 		List<Favorite> favoriteList = favoriteRepository.findByUserIdAndItemId(userId, itemId);
 		return favoriteList;
 	}
+	
+	public void remove(Integer userId, Integer itemId) {
+		favoriteRepository.delete(userId, itemId);
+	}
 }

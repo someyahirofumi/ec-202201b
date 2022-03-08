@@ -9,29 +9,28 @@ public class Favorite {
 	/** ID */
 	private Integer id;
 	/** ユーザーID */
-	private Integer user_id;
+	private Integer userId;
 	/** アイテムID */
-	private Integer item_id;
+	private Integer itemId;
 	/** 商品 */
 	private Item item;
-	
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getUser_id() {
-		return user_id;
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setUser_id(Integer user_id) {
-		this.user_id = user_id;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
-	public Integer getItem_id() {
-		return item_id;
+	public Integer getItemId() {
+		return itemId;
 	}
-	public void setItem_id(Integer item_id) {
-		this.item_id = item_id;
+	public void setItemId(Integer itemId) {
+		this.itemId = itemId;
 	}
 	public Item getItem() {
 		return item;
@@ -41,8 +40,9 @@ public class Favorite {
 	}
 	@Override
 	public String toString() {
-		return "Favorite [id=" + id + ", user_id=" + user_id
-				+ ", item_id=" + item_id + ", item=" + item
+		return "Favorite [id=" + id + ", userId=" + userId
+				+ ", itemId=" + itemId + ", item=" + item
 				+ "]";
 	}
+	
 }

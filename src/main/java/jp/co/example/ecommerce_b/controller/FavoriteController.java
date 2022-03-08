@@ -25,7 +25,9 @@ public class FavoriteController {
 	@RequestMapping("/add")
 	public String favorite(Integer itemId) {
 		Integer userId = (Integer) session.getAttribute("userId");
-		favoriteService.favorite(userId, itemId);
+		if (userId != null && favoriteService.confirmFavorite(userId, itemId) == null) {
+			favoriteService.favorite(userId, itemId);
+		}
 		//favoriteService.favorite(1, 1);
 		
 		return "favorite_list";

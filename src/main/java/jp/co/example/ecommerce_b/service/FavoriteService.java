@@ -1,8 +1,11 @@
 package jp.co.example.ecommerce_b.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jp.co.example.ecommerce_b.domain.Favorite;
 import jp.co.example.ecommerce_b.repository.FavoriteRepository;
 
 /**
@@ -17,5 +20,17 @@ public class FavoriteService {
 	
 	public void favorite(Integer userId, Integer itemId) {
 		favoriteRepository.insert(userId, itemId);
+	}
+	
+	public List<Favorite> showList(Integer userId) {
+		return favoriteRepository.findByUserIdAndItemId(userId, null);
+	}
+	
+	public Favorite confirmFavorite(Integer userId, Integer itemId) {
+		List<Favorite> favoriteList = favoriteRepository.findByUserIdAndItemId(userId, itemId);
+		if (favoriteList.isEmpty()) {
+			return null;
+		}
+		return favoriteList.get(0);
 	}
 }

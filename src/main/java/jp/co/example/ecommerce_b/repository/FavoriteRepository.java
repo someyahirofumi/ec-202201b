@@ -36,13 +36,18 @@ public class FavoriteRepository {
 		return favorite;
 	};
 	
-	public List<Favorite> findByUserId(Integer userId) {
+	public List<Favorite> findByUserIdAndItemId(Integer userId, Integer itemId) {
 		String sql = "SELECT f.id,item_id,user_id,name,image_path"
 				+ " FROM favorites as f"
 				+ " JOIN items as i"
-				+ " ON f.item_id=i.id\n"
-				+ " WHERE user_id=:userId ORDER BY f.id DESC";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+				+ " ON f.item_id=i.id"
+				+ " WHERE user_id=:userId";
+		MapSqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+		if (itemId != null) {
+			sql += " AND item_id=:itemId";
+			param.addValue("itemId", itemId);
+		}
+		sql += " ORDER BY f.id DESC";
 		List<Favorite> favoriteList = template.query(sql, param, FAVORITE_ROW_MAPPER);
 		
 		return favoriteList;

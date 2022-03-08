@@ -1,7 +1,6 @@
 package jp.co.example.ecommerce_b.controller;
 
 import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import jp.co.example.ecommerce_b.domain.Favorite;
+
+
+
 import jp.co.example.ecommerce_b.domain.Item;
+
+
 import jp.co.example.ecommerce_b.form.ItemsearchForm;
+
 import jp.co.example.ecommerce_b.domain.Topping;
 import jp.co.example.ecommerce_b.form.IntoCartForm;
 import jp.co.example.ecommerce_b.service.FavoriteService;
@@ -21,6 +25,12 @@ import jp.co.example.ecommerce_b.service.Itemservice;
 @Controller
 @RequestMapping("")
 public class EcController {
+
+	
+	
+	
+	
+
 
 	@Autowired
 	private Itemservice itemService;
@@ -46,6 +56,12 @@ public class EcController {
 		return "login";
 	}
 
+	
+	
+
+
+
+
 	/**
 	 * 送られてきたitemIDをもとにして商品を取得するメソッド トッピング全件取得のsqlも実行し、トッピングリストをitemオブジェクトに格納
 	 * 
@@ -60,6 +76,7 @@ public class EcController {
 		//Item item = itemService.findByItemId(1);
 
 		List<Topping> toppingList = itemService.toppingFindAll();
+
 		item.setToppingList(toppingList);
 		
 		session.setAttribute("userId", 1);
@@ -79,13 +96,13 @@ public class EcController {
 
 	@RequestMapping("/itemList")
 	public String itemList(String code, Model model) {
-
 		// 全件表示
 		if (code == null) {
 			List<Item> itemList = itemService.findAllItemList();
 			model.addAttribute("itemList", itemList);
 		} else {
 			List<Item> searchItem = itemService.search(code);
+			Integer searchCount1= itemService.searchCount(code);
 			model.addAttribute("code", code);
 			String noList = "null";
 			// 検索結果がない場合
@@ -97,33 +114,19 @@ public class EcController {
 				// 検索結果がある場合
 			} else if (!(null == searchItem)) {
 				model.addAttribute("searchItem", searchItem);
+				model.addAttribute("searchCount", searchCount1);
 			}
 		}
 		return "item_list_curry";
 	}
-
-	@RequestMapping("/itemAlign")
-	public String itemAlign(String listBox, Model model, String code) {
-		if (listBox.equals("low")) {
-			List<Item> itemList = itemService.search1(code);
-			model.addAttribute("itemList", itemList);
-		} else if (listBox.equals("high")) {
-			List<Item> itemList = itemService.highList();
-			model.addAttribute("itemList", itemList);
-		} else {
-			List<Item> itemList = itemService.findAllItemList();
-			model.addAttribute("itemList", itemList);
-		}
-		return "redirect:/itemList";
-	}
-
-	/*
-	 * @RequestMapping("/itemAlign") public String itemAlign(String listBox, Model
-	 * model) { if (listBox.equals("low")) { List<Item> itemList =
-	 * itemService.lowList(); model.addAttribute("itemList", itemList); } else if
-	 * (listBox.equals("high")) { List<Item> itemList = itemService.highList();
-	 * model.addAttribute("itemList", itemList); } else { List<Item> itemList =
-	 * itemService.itemList(); model.addAttribute("itemList", itemList); } return
-	 * "redirect:/itemList"; }
-	 */
+	
+	  @RequestMapping("/itemAlign") 
+	  public String itemAlign(String listBox, Model
+	  model) { if (listBox.equals("low")) { List<Item> itemList =
+	  itemService.lowList(); model.addAttribute("itemList", itemList); } else if
+	  (listBox.equals("high")) { List<Item> itemList = itemService.highList();
+	  model.addAttribute("itemList", itemList); } else { List<Item> itemList =
+	  itemService.findAllItemList(); model.addAttribute("itemList", itemList); } return
+	  "item_list_curry"; }
+	 
 }

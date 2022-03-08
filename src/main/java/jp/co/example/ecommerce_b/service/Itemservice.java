@@ -72,4 +72,7 @@ public class Itemservice {
 		
 	}
 
+	public Integer searchCount(String name) {
+		return itemRepository.searchCount(name);
+		}
 }

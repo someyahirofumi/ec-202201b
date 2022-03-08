@@ -1,5 +1,5 @@
 /* $(function(){
 	$("#submit_btn").on("click",function(){
-		$("#result").show();
+		$("#select_menu").hidden();
 	})
 })*/

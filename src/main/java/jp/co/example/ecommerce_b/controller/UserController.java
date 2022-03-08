@@ -3,15 +3,16 @@ package jp.co.example.ecommerce_b.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import jp.co.example.ecommerce_b.domain.User;
+import jp.co.example.ecommerce_b.domain.Users;
 import jp.co.example.ecommerce_b.form.UserForm;
 import jp.co.example.ecommerce_b.service.UserService;
 
@@ -77,8 +78,9 @@ public class UserController {
 			return toRegisterUser();
 		}
 		
+		
 		//上記の確認後、不備がなければ登録処理を行う。
-		User user = new User();
+		Users user = new Users();
 		
 		user.setName(form.getName());
 		user.setEmail(form.getEmail());
@@ -89,7 +91,7 @@ public class UserController {
 		
 		userservice.resgisterUser(user);
 		
-		return toLogin();
+		return "/itemList";
 	}
 	
 	/**
@@ -101,17 +103,20 @@ public class UserController {
 	 * 
 	 */
 	@RequestMapping("")
-	public String toLogin() {
-		
-		//ログイン状態の確認
-		
-		//ログイン済みの場合
-		if(session.getAttribute("userInfo") != null) {
-			return "/item_list_curry";
+	public String toLogin(Model model,@RequestParam(required = false) String error) {
+		if(error != null) {
+			System.out.println("失敗");
+			model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
 		}
 		
+		//ログイン済みの場合
+				if(session.getAttribute("userInfo") != null) {
+					return "/item_list_curry";
+				}
+				
 		//未ログインの場合
 		return "/login";
+	
 	}
 	
 	
@@ -130,12 +135,16 @@ public class UserController {
 	 */
 	@RequestMapping("/login")
 	public String Login(String email,String password,Model model) {
+		
+		
+		//以下、Spring Security にて実装のためコメントアウト
 		//入力されたメールアドレス、パスワードからユーザー情報を検索
 		//検索結果が０件のとき、エラーメッセージを表示
-		if(userservice.Login(email, password).isEmpty()) {
-			model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
-			return toLogin();
-		}
+		//if(userservice.Login(email, password) == null) {
+		//	System.out.println("失敗");
+		//	model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
+		//	return "/user/";
+		//}
 		
 		//sessionにユーザー情報を格納(idだけで良い？)
 		System.out.println(userservice.Login(email, password));
@@ -149,7 +158,20 @@ public class UserController {
 		
 		
 		//仮で注文一覧画面を表示
-		return "/item_list_curry";
+		return "/itemlist";
+	}
+		/**
+		 * ログアウト処理
+		 * 
+		 * 
+		 * @return ユーザー情報
+		 * session スコープに存在するユーザー情報を削除し、ログイン画面に遷移する。
+		 * 
+		 */
+		@RequestMapping("/logout")
+		public String Logout() {
+		session.removeAttribute("userInfo");
+		return "/user/";
 	}
 }
 

@@ -28,7 +28,7 @@ public class Itemrepository {
 	 */
 
 	public List<Item> findAllItemList() {
-		String sql = "SELECT id,name,description,price_m,price_l,image_path FROM items";
+		String sql = "SELECT id,name,description,price_m,price_l,image_path FROM items ORDER BY price_m ASC ";
 		List<Item> itemList=template.query(sql, ITEM_ROW_MAPPER);
 		return itemList;
 	}
@@ -40,6 +40,15 @@ public class Itemrepository {
 		String sql = "SELECT id, name, description, price_m, price_l, image_path FROM items ORDER BY price_m ASC";
 		List<Item> lowList=template.query(sql, ITEM_ROW_MAPPER);
 		return lowList;
+		
+	}
+	/**
+	 * 全件検索　高い順
+	 */
+	public List<Item> findAllHigh(){
+		String sql = "SELECT id, name, description, price_m, price_l, image_path FROM items ORDER BY price_m DESC";
+		List<Item> highList=template.query(sql, ITEM_ROW_MAPPER);
+		return highList;
 		
 	}
 	
@@ -68,24 +77,18 @@ public class Itemrepository {
 	}
 	
 	
-	/**
-	 * 全件検索　高い順
-	 */
-	public List<Item> findAllHigh(){
-		String sql = "SELECT id, name, description, price_m, price_l, image_path FROM items ORDER BY price_m DESC";
-		List<Item> highList=template.query(sql, ITEM_ROW_MAPPER);
-		return highList;
-		
-	}
+	
 	/**
 	 * 商品検索
 	 */
 	public List<Item> search(String name) {
-		String sql="SELECT id,name,description,price_m,price_l,image_path FROM items WHERE name LIKE :name";
+		String sql="SELECT id,name,description,price_m,price_l,image_path FROM items WHERE name LIKE :name  ORDER BY price_m ASC";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+name+"%");
 		List <Item> searchItem =template.query(sql, param, ITEM_ROW_MAPPER);
 		return searchItem;
 	}
+	
+	
 	
 	/**
 	 *検索結果 安い順 
@@ -98,5 +101,16 @@ public class Itemrepository {
 		List <Item> searchItem1 =template.query(sql, param, ITEM_ROW_MAPPER);
 		return searchItem1;
 	}
+	
+	/**
+	 * 検索した商品の集約(ヒット数)
+	 */
+	public Integer searchCount(String name) {
+		String sql="SELECT count(name) FROM items WHERE name LIKE :name";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+name+"%");
+	     Integer searchCount=template.queryForObject(sql, param, Integer.class);
+		return searchCount;
+	}
+	
 	}
 

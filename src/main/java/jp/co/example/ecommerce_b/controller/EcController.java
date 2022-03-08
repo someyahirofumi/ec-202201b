@@ -85,13 +85,13 @@ public class EcController {
 
 	@RequestMapping("/itemList")
 	public String itemList(String code, Model model) {
-
 		// 全件表示
 		if (code == null) {
 			List<Item> itemList = itemService.findAllItemList();
 			model.addAttribute("itemList", itemList);
 		} else {
 			List<Item> searchItem = itemService.search(code);
+			Integer searchCount1= itemService.searchCount(code);
 			model.addAttribute("code", code);
 			String noList = "null";
 			// 検索結果がない場合
@@ -103,33 +103,19 @@ public class EcController {
 				// 検索結果がある場合
 			} else if (!(null == searchItem)) {
 				model.addAttribute("searchItem", searchItem);
+				model.addAttribute("searchCount", searchCount1);
 			}
 		}
 		return "item_list_curry";
 	}
-
-	@RequestMapping("/itemAlign")
-	public String itemAlign(String listBox, Model model, String code) {
-		if (listBox.equals("low")) {
-			List<Item> itemList = itemService.search1(code);
-			model.addAttribute("itemList", itemList);
-		} else if (listBox.equals("high")) {
-			List<Item> itemList = itemService.highList();
-			model.addAttribute("itemList", itemList);
-		} else {
-			List<Item> itemList = itemService.findAllItemList();
-			model.addAttribute("itemList", itemList);
-		}
-		return "redirect:/itemList";
-	}
-
-	/*
-	 * @RequestMapping("/itemAlign") public String itemAlign(String listBox, Model
-	 * model) { if (listBox.equals("low")) { List<Item> itemList =
-	 * itemService.lowList(); model.addAttribute("itemList", itemList); } else if
-	 * (listBox.equals("high")) { List<Item> itemList = itemService.highList();
-	 * model.addAttribute("itemList", itemList); } else { List<Item> itemList =
-	 * itemService.itemList(); model.addAttribute("itemList", itemList); } return
-	 * "redirect:/itemList"; }
-	 */
+	
+	  @RequestMapping("/itemAlign") 
+	  public String itemAlign(String listBox, Model
+	  model) { if (listBox.equals("low")) { List<Item> itemList =
+	  itemService.lowList(); model.addAttribute("itemList", itemList); } else if
+	  (listBox.equals("high")) { List<Item> itemList = itemService.highList();
+	  model.addAttribute("itemList", itemList); } else { List<Item> itemList =
+	  itemService.findAllItemList(); model.addAttribute("itemList", itemList); } return
+	  "item_list_curry"; }
+	 
 }

@@ -89,8 +89,9 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-left">
                       <p class="lead">商品名：<span th:text="${favorite.item.name}"></span></p>
                     </div>
-                    <form>
-                      <button>お気に入りを解除する</button>
+                    <form th:action="@{/favorite/remove}" method="post">
+                      <button type="submit">お気に入りを解除する</button>
+                      <input type="hidden" name="itemId" th:value="${favorite.item.id}">
                     </form>
                 </th>
               </tr>

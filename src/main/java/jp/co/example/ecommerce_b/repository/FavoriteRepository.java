@@ -36,6 +36,13 @@ public class FavoriteRepository {
 		return favorite;
 	};
 	
+	/**
+	 * ユーザーIDとアイテムID から検索
+	 * 
+	 * @param userId
+	 * @param itemId
+	 * @return
+	 */
 	public List<Favorite> findByUserIdAndItemId(Integer userId, Integer itemId) {
 		String sql = "SELECT f.id,item_id,user_id,name,image_path"
 				+ " FROM favorites as f"
@@ -53,6 +60,12 @@ public class FavoriteRepository {
 		return favoriteList;
 	}
 	
+	/**
+	 * favoritesテーブルに登録
+	 * 
+	 * @param userId
+	 * @param itemId
+	 */
 	public void insert(Integer userId, Integer itemId) {
 		String sql = "INSERT INTO favorites"
 				+ "        (user_id, item_id)"
@@ -62,6 +75,12 @@ public class FavoriteRepository {
 		template.update(sql, param);
 	}
 	
+	/**
+	 * ユーザーIDとアイテムIDをもとに削除
+	 * 
+	 * @param userId
+	 * @param itemId
+	 */
 	public void delete(Integer userId, Integer itemId) {
 		String sql = "DELETE FROM favorites WHERE user_id=:userId AND item_id=:itemId";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId).addValue("itemId", itemId);

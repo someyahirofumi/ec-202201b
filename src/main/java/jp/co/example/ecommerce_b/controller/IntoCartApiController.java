@@ -38,12 +38,12 @@ public class IntoCartApiController {
 			toIntToppingIds.add(Integer.parseInt(ids));
 		}
 	
-		
-		//動作確認用
-		session.setAttribute("userId", 2);
+//		
+//		//動作確認用
+//		session.setAttribute("userId", 2);
 		
 		//仮登録
-		itemId=1;
+//		itemId=1;
 		//必要なオブジェクト生成
 		Order order = new Order();
 		OrderItem item = new OrderItem();

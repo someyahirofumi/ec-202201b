@@ -75,7 +75,7 @@ public class OrderItem {
 		} else if (size == 'L') {
 			subTotalPrice = item.getPriceL() + orderToppingPrice;
 		}
-		
+		subTotalPrice *= quantity;
 		return subTotalPrice;
 	}
 }

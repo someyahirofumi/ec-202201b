@@ -5,13 +5,13 @@ package jp.co.example.ecommerce_b.controller;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
 
@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.co.example.ecommerce_b.domain.Order;
-import jp.co.example.ecommerce_b.form.UpdateOrderForm;
 import jp.co.example.ecommerce_b.domain.OrderItem;
 import jp.co.example.ecommerce_b.domain.OrderTopping;
 import jp.co.example.ecommerce_b.form.IntoCartForm;
+import jp.co.example.ecommerce_b.form.UpdateOrderForm;
 import jp.co.example.ecommerce_b.service.OrderService;
 
 /**
@@ -300,7 +300,7 @@ public class OrderController {
 		}
 		return toCartList(model);
 	}
-	
+
 	
 
 	
@@ -320,9 +320,10 @@ public class OrderController {
 			order=orderService.getNotLoginCartList((String)session.getAttribute("preId"));
 		}
 		//orderListをrequestスコープに格納(orderList)
-		if(order == null) {
+		if(order.getOrderItemList().isEmpty()) {
 			model.addAttribute("cartNullMessage","カートに商品がありません");
 		}else {
+			
 		model.addAttribute("cart",order);
 		}
 		return "cart_list";

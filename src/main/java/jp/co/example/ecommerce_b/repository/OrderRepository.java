@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -228,41 +228,27 @@ public class OrderRepository {
 		
 	}
 	
-//	//削除ボタン押下時処理に使用
-//	public OrderItem getOrderItem(Integer orderId) {
-//		String sql = "select * from order_items where id=:orderId;";
-//		String sql2="select * from order_toppings where order_item_id=:orderId;";
-//				
-//		SqlParameterSource param = new MapSqlParameterSource().addValue("orderId",orderId);
-//		
-//		List<OrderItem> list = template.query(sql,param,ORDERITEM_ROW_MAPPER);
-//		List<Topping> toppingList =template.query(sql2,TOPPING_ROW_MAPPER);
-//		if (list.isEmpty()) {
-//			return null;
-//		} else {
-//		
-//			return list.get(0);
-//		}
-//	}
+
 	
 	//ログインユーザー用カートリスト取得メソッド
 	//全てのテーブルのデータが入っていないと動かない＝ダミーデータを入れておく必要がある？トッピングのテーブル検索は分ける必要あり？
 	public Order getCartList(Integer userId){
 		String sql = 
 				"SELECT o.id as order_id,o.total_price,oi.id as order_item_id,oi.quantity,oi.size,i.name as item_name,"
-				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,"
+				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,o.status as status,o.order_date,o.delivery_time,"
 						+ " i.id as item_id,i.image_path,t.name as topping_name,t.price_m as topping_price_M,t.price_l as topping_price_L"
 						+ " FROM "
 						+ " orders as o"
 						+ " LEFT OUTER JOIN order_items as oi ON o.id=oi.order_id"
 						+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
-						+ " INNER JOIN items as i ON oi.item_id= i.id"
-						+ " INNER JOIN toppings as t ON ot.topping_id=t.id"
+						+ " LEFT OUTER JOIN items as i ON oi.item_id= i.id"
+						+ " LEFT OUTER JOIN toppings as t ON ot.topping_id=t.id"
 						+ " WHERE"
 						+ " o.user_id=:userId AND o.status=0;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
 		List<Order> cartList=new ArrayList<>();
 		cartList= template.query(sql, param,ORDER_ORDERITEM_ORDERTOPPING_EXTRACTOR);
+		
 		 if (cartList.isEmpty()) {
 				return null;
 			} else {
@@ -274,14 +260,14 @@ public class OrderRepository {
 	public Order getNotLoginCartList(String preId){
 		String sql = 
 				"SELECT o.id as order_id,o.total_price,oi.id as order_item_id,oi.quantity,oi.size,i.name as item_name,"
-				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,"
+				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,o.status as status,o.order_date,o.delivery_time,"
 						+ " i.id as item_id,i.image_path,t.name as topping_name,t.price_m as topping_price_M,t.price_l as topping_price_L"
 						+ " FROM "
 						+ " orders as o"
 						+ " LEFT OUTER JOIN order_items as oi ON o.id=oi.order_id"
 						+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
-						+ " INNER JOIN items as i ON oi.item_id= i.id"
-						+ " INNER JOIN toppings as t ON ot.topping_id=t.id"
+						+ " LEFT OUTER JOIN items as i ON oi.item_id= i.id"
+						+ " LEFT OUTER JOIN toppings as t ON ot.topping_id=t.id"
 						+ " WHERE"
 						+ " o.pre_id=:preId AND o.status=0;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("preId", preId);

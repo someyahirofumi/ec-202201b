@@ -17,6 +17,7 @@ import jp.co.example.ecommerce_b.service.Itemservice;
  *
  */
 @RestController
+@RequestMapping("/item")
 public class ItemRestController {
 	
 	@Autowired

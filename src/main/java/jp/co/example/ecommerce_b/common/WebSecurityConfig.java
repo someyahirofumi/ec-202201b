@@ -32,15 +32,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 		
 		http.authorizeRequests() // 認可に関する設定
-		.antMatchers("/user","/","/user/toRegisterUser","/user/registerUser","/user/toRegisterUser/login","/user/login").permitAll() //「/」などのパスは全てのユーザに許可
+		
+		//ログイン前に閲覧可能なページを指定する。
+		//①ログイン初期表示画面（/user/）②ユーザー登録画面（/user/toRegisterUser)③ログイン画面（/login)→各画面から遷移する？
+		//
+	    .antMatchers("/user/","/user/toRegisterUser","/login").permitAll() 
 		.anyRequest().authenticated(); // それ以外のパスは認証が必要
 
+		
 	http.formLogin() // ログインに関する設定
 		.loginPage("/user/") // ログイン画面に遷移させるパス(ログイン認証が必要なパスを指定してかつログインされていないとこのパスに遷移される)
 		.loginProcessingUrl("/user/login") // ログインボタンを押した際に遷移させるパス(ここに遷移させれば自動的にログインが行われる)
 	    .usernameParameter("email") // 認証時に使用するユーザ名のリクエストパラメータ名(今回はメールアドレスを使用)
 	    .passwordParameter("password")// 認証時に使用するパスワードのリクエストパラメータ名
-	    .defaultSuccessUrl("/");
+	    .defaultSuccessUrl("/user/toRegisterUser");//ログイン成功時の遷移先（仮でユーザー登録画面を指定）
 	
 	
         

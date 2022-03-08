@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.co.example.ecommerce_b.domain.Users;
 import jp.co.example.ecommerce_b.form.UserForm;
@@ -90,7 +91,7 @@ public class UserController {
 		
 		userservice.resgisterUser(user);
 		
-		return toLogin();
+		return "/user/";
 	}
 	
 	/**
@@ -102,17 +103,20 @@ public class UserController {
 	 * 
 	 */
 	@RequestMapping("")
-	public String toLogin() {
-		
-		//ログイン状態の確認
-		
-		//ログイン済みの場合
-		if(session.getAttribute("userInfo") != null) {
-			return "/item_list_curry";
+	public String toLogin(Model model,@RequestParam(required = false) String error) {
+		if(error != null) {
+			System.out.println("失敗");
+			model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
 		}
 		
+		//ログイン済みの場合
+				if(session.getAttribute("userInfo") != null) {
+					return "/item_list_curry";
+				}
+				
 		//未ログインの場合
 		return "/login";
+	
 	}
 	
 	
@@ -133,23 +137,14 @@ public class UserController {
 	public String Login(String email,String password,Model model) {
 		
 		
-		
+		//以下、Spring Security にて実装のためコメントアウト
 		//入力されたメールアドレス、パスワードからユーザー情報を検索
 		//検索結果が０件のとき、エラーメッセージを表示
-		
-		//入力されたパスワードの値とハッシュ化されたパスワードの値の一致を確認する
-	    BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
-	    
-	    
-	    //if(bcpe.matches(password, userservice.searchPassword(email))) {
-	    	
-	    //}
-	    
-		if(userservice.Login(email, password) == null) {
-			System.out.println("失敗");
-			model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
-			return toLogin();
-		}
+		//if(userservice.Login(email, password) == null) {
+		//	System.out.println("失敗");
+		//	model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
+		//	return "/user/";
+		//}
 		
 		//sessionにユーザー情報を格納(idだけで良い？)
 		System.out.println(userservice.Login(email, password));
@@ -163,9 +158,9 @@ public class UserController {
 		
 		
 		//仮で注文一覧画面を表示
-		//return "/item_list_curry";
-		System.out.println("成功");
-		return "/login";
+		return "/item_list_curry";
+		
+		
 	}
 }
 

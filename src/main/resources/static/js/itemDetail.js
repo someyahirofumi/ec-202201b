@@ -1,41 +1,6 @@
 'use strict';
 
-/*let $totalPrice=document.getElementById('total-price');
-let $sizeM = document.getElementById('sizeM');
-let $sizeL = document.getElementById('sizeL');
-let $sizeMprice=document.getElementById('sizeMprice');
-let $sizeLprice=document.getElementById('sizeLprice');
-let $toppinglist =document.querySelectorAll(".toppingCount");
 
-
-$sizeM.addEventListener('change',()=>{
-	$totalPrice.innerText=removeComma($totalPrice.innerText)-removeComma($sizeLprice.innerText)+removeComma($sizeMprice.innerText);
-})
-$sizeL.addEventListener('change',()=>{
-$totalPrice.innerText=removeComma($totalPrice.innerText)-removeComma($sizeMprice.innerText)+removeComma($sizeLprice.innerText);                                                                                                                                         
-})
-$toppinglist.forEach(function(target){
-	
-	target.addEventListener('change',()=>{
-	
-	
-
-	let count =0;
-	for(let i = 0; i<$toppinglist.length;i++){
-		if($toppinglist[i].checked){
-			count ++;
-		}
-		console.log(count);
-	}
-	if($sizeM.checked){
-		$totalPrice.innerText= removeComma($totalPrice.innerText)+(200*count);
-	}else if($sizeL.checked){
-		$totalPrice.innerText= removeComma($totalPrice.innerText)+(300*count);
-	}
-	
-})
-	
-})*/
 
 $(function() {
 	calc_price();
@@ -77,7 +42,7 @@ $(function() {
 
 	$("#intoCartForm").on('submit', function(e) {
 		e.preventDefault();
-		console.log("非同期通信処理");
+		
 		let toppingList = [];
 		$('[class="toppingCount"]:checked').each(function() {
 			toppingList.push(($(this).val()))

@@ -17,6 +17,42 @@ public class Itemservice {
 	
 	@Autowired
 	private Itemrepository itemRepository;
+	/**
+	 * 全件検索 全商品一覧の表示
+	 */
+	public List<Item> findAllItemList(){
+		return itemRepository.findAllItemList();
+	}
+	
+	/**
+	 * 全件検索　安い順
+	 */
+	public List<Item> lowList(){
+		return itemRepository.findAllLow();
+	}
+	
+	/**
+	 * 全件検索　安い順
+	 */
+	public List<Item> highList(){
+		return itemRepository.findAllHigh();
+	}
+	
+	/**
+	 * 商品検索
+	 */
+	public List<Item> search(String name) {
+		return itemRepository.search(name);
+	}
+	
+	/**
+	 * 検索結果　安い順
+	 */
+	public List<Item> search1(String name) {
+		return itemRepository.search1(name);
+	}
+
+
 	
 	/**　送られてきたitemIdを条件としてItemテーブルを検索する
 	 * @param itemId

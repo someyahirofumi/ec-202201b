@@ -40,7 +40,7 @@
 							th:href="@{/order/toCartList}">ショッピングカート</a>&nbsp;&nbsp; <a
 							href="order_history.html" class="navbar-link">注文履歴</a>&nbsp;&nbsp;
 						<a href="login.html" class="navbar-link"
-							th:href="@{/user/toLogin}">ログイン</a>&nbsp;&nbsp; <a
+							th:href="@{/user}">ログイン</a>&nbsp;&nbsp; <a
 							href="item_list_pizza.html" class="navbar-link">ログアウト</a>
 					</p>
 				</div>
@@ -48,14 +48,14 @@
 			</div>
 			<!-- /.container-fluid -->
 		</nav>
-		<form action="item_list_curry.html">
+		<form action="item_list_curry.html" th:action="@{/itemList}">
 			<p>
 				<input class="form-control btn btn-warning btn-block"
 					id="toListButton" type="submit" value="商品リストへ戻る" />
 			</p>
 		</form>
-		<form id="intoCartForm" th:object="${intoCartForm}">
-			<!-- th:action="@{/order/intoCart?itemId=}+${item.id}" -->
+		<form id="intoCartForm" >
+			
 
 			<div class="row">
 				<div class="col-xs-offset-2 col-xs-8">
@@ -86,15 +86,17 @@
 										<label for="inputResponsibleCompany">サイズ</label>
 									</div>
 									<div class="col-sm-12">
-										<label class="radio-inline" id="sizeM"> <input
-											type="radio" class="size" name="size" th:field="*{size}"
-											th:checked="checked" value="M" /> <input type="hidden"
-											name="priceM" id="priceM" th:value="${item.priceM}">
-											<span class="price">&nbsp;М&nbsp;</span>&nbsp;&nbsp;<span
-											th:text="${#numbers.formatInteger(item.priceM,4,'COMMA')}"
+										<label class="radio-inline" id="sizeM"> 
+										 <input
+											type="radio" class="size" name="size" 
+											checked="checked" value="M" /> 
+											 <input type="hidden" name="priceM" id="priceM" th:value="${item.priceM}">
+											 <span class="price">&nbsp;М&nbsp;</span>
+											 &nbsp;&nbsp;
+											 <span th:text="${#numbers.formatInteger(item.priceM,4,'COMMA')}"
 											id="sizeMprice">1,380</span>円(税抜)
 										</label> <label class="radio-inline" id="sizeL"> <input
-											type="radio" class="size" name="size" th:field="*{size}"
+											type="radio" class="size" name="size" 
 											value="L"> <input type="hidden" name="priceL"
 											id="priceL" th:value="${item.priceL}"> <span
 											class="price">&nbsp;Ｌ</span> >&nbsp;&nbsp;<span
@@ -149,7 +151,7 @@
 											th:each="toppings:${item.toppingList}"> <input
 											type="checkbox" name="topping" class="toppingCount"
 											th:value="${toppings.id}" th:text="${toppings.name}"
-											th:field="*{toppingId}">
+											>
 										</label>
 									</div>
 								</div>
@@ -163,7 +165,7 @@
 									<div class="col-xs-5 col-sm-5">
 										<label for="">数量:</label> <label class="control-label"
 											style="color: red" for="inputError">数量を選択してください</label> <select
-											name="area" class="form-control" th:field="*{quantity}"
+											name="area" class="form-control" 
 											id="quantity">
 											<option value="1">1</option>
 											<option value="2">2</option>

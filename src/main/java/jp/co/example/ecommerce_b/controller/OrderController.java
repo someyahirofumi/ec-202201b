@@ -314,11 +314,11 @@ public class OrderController {
 		if(session.getAttribute("userId") !=null) {
 			//ログインしている
 			order=orderService.getCartList((Integer)session.getAttribute("userId"));
-			
 		}else if(session.getAttribute("preId") != null) {
 			//非ログイン
 			order=orderService.getNotLoginCartList((String)session.getAttribute("preId"));
 		}
+		
 		//orderListをrequestスコープに格納(orderList)
 		if(order.getOrderItemList().isEmpty()) {
 			model.addAttribute("cartNullMessage","カートに商品がありません");

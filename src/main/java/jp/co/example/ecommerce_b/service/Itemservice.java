@@ -32,7 +32,7 @@ public class Itemservice {
 	}
 	
 	/**
-	 * 全件検索　安い順
+	 * 全件検索　高い順
 	 */
 	public List<Item> highList(){
 		return itemRepository.findAllHigh();

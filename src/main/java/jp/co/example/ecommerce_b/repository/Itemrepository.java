@@ -111,6 +111,14 @@ public class Itemrepository {
 	     Integer searchCount=template.queryForObject(sql, param, Integer.class);
 		return searchCount;
 	}
-	
+	/**
+	 * 全商品の集約(ヒット数)
+	 */
+	public Integer AllItemCount() {
+		String sql="SELECT count(*) FROM items";
+		SqlParameterSource param = new MapSqlParameterSource();
+		Integer AllItemCount=template.queryForObject(sql, param, Integer.class);
+		 return AllItemCount;
+	}
 	}
 

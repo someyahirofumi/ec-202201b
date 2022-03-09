@@ -71,8 +71,18 @@ public class Itemservice {
 		return itemRepository.findAll();
 		
 	}
-
+	/**
+	 * 商品結果カウント
+	 * 
+	 */
 	public Integer searchCount(String name) {
 		return itemRepository.searchCount(name);
 		}
+	/**
+	 * 全商品カウント
+	 * 
+	 */
+	public Integer AllItemCount() {
+		return itemRepository.AllItemCount();
+	}
 }

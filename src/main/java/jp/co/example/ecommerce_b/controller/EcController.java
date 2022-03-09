@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import jp.co.example.ecommerce_b.domain.Favorite;
 
-
-
 import jp.co.example.ecommerce_b.domain.Item;
-
 
 import jp.co.example.ecommerce_b.form.ItemsearchForm;
 
@@ -26,18 +23,12 @@ import jp.co.example.ecommerce_b.service.Itemservice;
 @RequestMapping("")
 public class EcController {
 
-	
-	
-	
-	
-
-
 	@Autowired
 	private Itemservice itemService;
-	
+
 	@Autowired
 	private FavoriteService favoriteService;
-	
+
 	@Autowired
 	private HttpSession session;
 
@@ -56,12 +47,6 @@ public class EcController {
 		return "login";
 	}
 
-	
-	
-
-
-
-
 	/**
 	 * 送られてきたitemIDをもとにして商品を取得するメソッド トッピング全件取得のsqlも実行し、トッピングリストをitemオブジェクトに格納
 	 * 
@@ -73,12 +58,12 @@ public class EcController {
 	public String toItemDetail(Integer itemId, Model model) {
 //		System.out.println("システム起動");
 		Item item = itemService.findByItemId(itemId);
-		//Item item = itemService.findByItemId(1);
+		// Item item = itemService.findByItemId(1);
 
 		List<Topping> toppingList = itemService.toppingFindAll();
 
 		item.setToppingList(toppingList);
-		
+
 		session.setAttribute("userId", 1);
 		Integer userId = (Integer) session.getAttribute("userId");
 		List<Favorite> favoriteList = favoriteService.confirmFavorite(userId, itemId);
@@ -97,12 +82,14 @@ public class EcController {
 	@RequestMapping("/itemList")
 	public String itemList(String code, Model model) {
 		// 全件表示
+		Integer AllItemCount = itemService.AllItemCount();
 		if (code == null) {
 			List<Item> itemList = itemService.findAllItemList();
+			model.addAttribute("searchCount", AllItemCount);
 			model.addAttribute("itemList", itemList);
 		} else {
 			List<Item> searchItem = itemService.search(code);
-			Integer searchCount1= itemService.searchCount(code);
+			Integer searchCount1 = itemService.searchCount(code);
 			model.addAttribute("code", code);
 			String noList = "null";
 			// 検索結果がない場合
@@ -110,6 +97,8 @@ public class EcController {
 				noList = "該当する商品がありません";
 				model.addAttribute("noList", noList);
 				List<Item> itemList = itemService.findAllItemList();
+				String noItem = "0";
+				model.addAttribute("searchCount", noItem);
 				model.addAttribute("itemList", itemList);
 				// 検索結果がある場合
 			} else if (!(null == searchItem)) {
@@ -119,14 +108,22 @@ public class EcController {
 		}
 		return "item_list_curry";
 	}
-	
-	  @RequestMapping("/itemAlign") 
-	  public String itemAlign(String listBox, Model
-	  model) { if (listBox.equals("low")) { List<Item> itemList =
-	  itemService.lowList(); model.addAttribute("itemList", itemList); } else if
-	  (listBox.equals("high")) { List<Item> itemList = itemService.highList();
-	  model.addAttribute("itemList", itemList); } else { List<Item> itemList =
-	  itemService.findAllItemList(); model.addAttribute("itemList", itemList); } return
-	  "item_list_curry"; }
-	 
+
+	@RequestMapping("/itemAlign")
+	public String itemAlign(String listBox, Model model) {
+		Integer AllItemCount = itemService.AllItemCount();
+		model.addAttribute("searchCount", AllItemCount);
+		if (listBox.equals("low")) {
+			List<Item> itemList = itemService.lowList();		
+			model.addAttribute("itemList", itemList);
+		} else if (listBox.equals("high")) {
+			List<Item> itemList = itemService.highList();
+			model.addAttribute("itemList", itemList);
+		} else {
+			List<Item> itemList = itemService.findAllItemList();
+			model.addAttribute("itemList", itemList);
+		}
+		return "item_list_curry";
+	}
+
 }

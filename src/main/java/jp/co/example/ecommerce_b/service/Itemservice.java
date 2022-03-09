@@ -32,7 +32,7 @@ public class Itemservice {
 	}
 	
 	/**
-	 * 全件検索　安い順
+	 * 全件検索　高い順
 	 */
 	public List<Item> highList(){
 		return itemRepository.findAllHigh();
@@ -44,15 +44,6 @@ public class Itemservice {
 	public List<Item> search(String name) {
 		return itemRepository.search(name);
 	}
-	
-	/**
-	 * 検索結果　安い順
-	 */
-	public List<Item> search1(String name) {
-		return itemRepository.search1(name);
-	}
-
-
 	
 	/**　送られてきたitemIdを条件としてItemテーブルを検索する
 	 * @param itemId
@@ -71,8 +62,18 @@ public class Itemservice {
 		return itemRepository.findAll();
 		
 	}
-
+	/**
+	 * 商品結果カウント
+	 * 
+	 */
 	public Integer searchCount(String name) {
 		return itemRepository.searchCount(name);
 		}
+	/**
+	 * 全商品カウント
+	 * 
+	 */
+	public Integer AllItemCount() {
+		return itemRepository.AllItemCount();
+	}
 }

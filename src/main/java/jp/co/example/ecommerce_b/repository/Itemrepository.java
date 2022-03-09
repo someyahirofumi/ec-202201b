@@ -88,20 +88,6 @@ public class Itemrepository {
 		return searchItem;
 	}
 	
-	
-	
-	/**
-	 *検索結果 安い順 
-	 * @param name
-	 * @return
-	 */
-	public List<Item> search1(String name) {
-		String sql="SELECT id,name,description,price_m,price_l,image_path FROM items WHERE name LIKE :name ORDER BY price_m DESC";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+name+"%");
-		List <Item> searchItem1 =template.query(sql, param, ITEM_ROW_MAPPER);
-		return searchItem1;
-	}
-	
 	/**
 	 * 検索した商品の集約(ヒット数)
 	 */

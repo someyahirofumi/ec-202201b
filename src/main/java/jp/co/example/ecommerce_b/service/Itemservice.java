@@ -45,15 +45,6 @@ public class Itemservice {
 		return itemRepository.search(name);
 	}
 	
-	/**
-	 * 検索結果　安い順
-	 */
-	public List<Item> search1(String name) {
-		return itemRepository.search1(name);
-	}
-
-
-	
 	/**　送られてきたitemIdを条件としてItemテーブルを検索する
 	 * @param itemId
 	 * @return　itemRepositoryのfindByItemIdメソッド実行する

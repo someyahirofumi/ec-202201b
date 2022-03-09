@@ -17,7 +17,7 @@ import jp.co.example.ecommerce_b.domain.Order;
 import jp.co.example.ecommerce_b.domain.OrderItem;
 import jp.co.example.ecommerce_b.domain.OrderTopping;
 
-class OrderRepositoryTest {
+class OrderRepositoryTest1 {
 	
 	@Autowired
 	private OrderRepository orderRepository;

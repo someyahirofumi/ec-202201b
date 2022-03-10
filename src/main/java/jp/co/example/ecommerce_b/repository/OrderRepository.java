@@ -96,7 +96,7 @@ public class OrderRepository {
 	 * @return 注文情報を持ったOrderオブジェクト
 	 */
 	public Order findByUserIdAndStatus(Integer userId, Integer status) {
-		String sql = "SELECT" + " o.id as order_id," + " total_price," + " order_item_id," + " item_id,"
+		String sql = "SELECT" + " o.id as order_id," + " total_price, status,order_date,delivery_time," + " order_item_id," + " item_id,"
 				+ " i.name as item_name," + " i.price_M as item_price_M," + " i.price_L as item_price_L,"
 				+ " image_path," + " quantity," + " size," + " topping_id," + " t.name as topping_name,"
 				+ " t.price_M as topping_price_M," + " t.price_L as topping_price_L" + " FROM orders as o"
@@ -308,7 +308,7 @@ public class OrderRepository {
 				+ " destination_zipcode=:destinationZipcode,"
 				+ " destination_address=:destinationAddress,"
 				+ " destination_tel=:destinationTel,"
-				+ " delivery_time=:delivaryTime,"
+				+ " delivery_time=:deliveryTime,"
 				+ " payment_method=:paymentMethod"
 				+ " WHERE id=:id";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(order);

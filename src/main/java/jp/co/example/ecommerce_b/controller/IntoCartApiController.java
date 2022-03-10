@@ -108,9 +108,9 @@ public class IntoCartApiController {
 			//ログインしていない状態の処理
 			//userIdを0でセット(userIdはNot Null設定のため)
 			order.setUserId(0);
-			
+			String preId = (String) session.getAttribute("preId");
 			//preIdが発行されていない＝カートに商品がない状態
-			if(session.getAttribute("preId") ==null) {
+			if(orderService.getNotLoginCartList(preId) ==null) {
 				//カートが空の状態時の処理
 				//新規にpreIdを作成オブジェクトにセット
 				

@@ -60,7 +60,7 @@
               <a href="favorite_list.html" th:href="@{/favorite/list}" class="navbar-link">お気に入り一覧</a
               >&nbsp;&nbsp;
               <a sec:authorize="!isAuthenticated()" href="login.html" th:href="@{/user}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
-              <a sec:authorize="isAuthenticated()" href="item_list_pizza.html" th:href="@{/user/logout}" class="navbar-link">ログアウト</a>
+              <a sec:authorize="isAuthenticated()" href="item_list_pizza.html" th:href="@{/logout}" class="navbar-link">ログアウト</a>
             </p>
           </div>
           <!-- /.navbar-collapse -->

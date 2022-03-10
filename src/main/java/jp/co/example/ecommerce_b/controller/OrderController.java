@@ -56,19 +56,19 @@ public class OrderController {
 	 */
 	@RequestMapping("/confirm")
 	public String showOrderConfirm(UpdateOrderForm form, Model model, @AuthenticationPrincipal LoginUser loginUser) {
-		Integer userId = loginUser.Getusers().getId();
-		if (userId == null) {
+		if (loginUser == null) {
 			return "redirect:/login";
 		}
+		Integer userId = loginUser.Getusers().getId();
 		String preId = (String) session.getAttribute("preId");
 		//仮データを入れて検証
+		System.out.println(preId);
 		Order order = null;
-		if (preId != null) {
+		if (orderService.showCart(0, 0, preId) != null) {
 			order = orderService.showCart(0, 0, preId);
 		} else {
 			order = orderService.showCart(userId, 0, null);
 		}
-		System.out.println(order);
 		if (order == null) {
 			return "item_list_curry";
 		}
@@ -194,48 +194,56 @@ public class OrderController {
 	
 	public String toCartList(Model model, @AuthenticationPrincipal LoginUser loginUser) {
 		
-		Order order = null;
-		String preId = (String) session.getAttribute("preId");
-		if (loginUser != null) {
+//		Order order = null;
+//		String preId = (String) session.getAttribute("preId");
+//		if (loginUser != null) {
+//			//ログインしている
+//			Integer userId = loginUser.Getusers().getId();
+//			if (orderService.getNotLoginCartList(preId) != null) {
+//				//ログイン前にカートを作った
+//				order = orderService.getNotLoginCartList(preId);
+//			} else if (orderService.getCartList(userId) != null) {
+//				//ログイン後にカートを作っていた
+//				order = orderService.getCartList(userId);
+//			} else {
+//				//ログイン前も後もカートがなかった
+//				order = new Order();
+//				order.setUserId(userId);
+//				order.setStatus(0);
+//				order.setTotalPrice(0);
+//				orderService.intoCart(order);
+//			}
+//		} else {
+//			//非ログイン
+//			order=orderService.getNotLoginCartList(preId);
+//			//カートがない＝ログイン前に初めてカートを作る
+//			if (order == null) {
+//				//UUIDをセット
+//				UUID uuID= UUID.randomUUID();
+//				preId = uuID.toString();
+//				session.setAttribute("preId", preId);
+//				
+//				order = new Order();
+//				order.setUserId(0);
+//				order.setPreId(preId);;
+//				order.setStatus(0);
+//				order.setTotalPrice(0);
+//				orderService.intoCart(order);
+//				order=orderService.getNotLoginCartList(preId);
+//			}
+//		}
+		Order order = new Order();
+		//ログイン状態の条件分岐
+		if(loginUser !=null) {
 			//ログインしている
-			Integer userId = loginUser.Getusers().getId();
-			if (orderService.getNotLoginCartList(preId) != null) {
-				//ログイン前にカートを作った
-				order = orderService.getNotLoginCartList(preId);
-			} else if (orderService.getCartList(userId) != null) {
-				//ログイン後にカートを作っていた
-				order = orderService.getCartList(userId);
-			} else {
-				//ログイン前も後もカートがなかった
-				order = new Order();
-				order.setUserId(userId);
-				order.setStatus(0);
-				order.setTotalPrice(0);
-				orderService.intoCart(order);
-			}
-		} else {
+			order=orderService.getCartList(loginUser.Getusers().getId());
+		}else {
 			//非ログイン
-			order=orderService.getNotLoginCartList(preId);
-			//カートがない＝ログイン前に初めてカートを作る
-			if (order == null) {
-				//UUIDをセット
-				UUID uuID= UUID.randomUUID();
-				preId = uuID.toString();
-				session.setAttribute("preId", preId);
-				
-				order = new Order();
-				order.setUserId(0);
-				order.setPreId(preId);;
-				order.setStatus(0);
-				order.setTotalPrice(0);
-				orderService.intoCart(order);
-				order=orderService.getNotLoginCartList(preId);
-			}
+			order=orderService.getNotLoginCartList((String)session.getAttribute("preId"));
 		}
 		
-		
 		//orderListをrequestスコープに格納(orderList)
-		if(order == null) {
+		if(order == null || order.getOrderItemList() == null) {
 			model.addAttribute("cartNullMessage","カートに商品がありません");
 		} else if(order.getOrderItemList().isEmpty()) {
 			model.addAttribute("cartNullMessage","カートに商品がありません");
@@ -260,7 +268,7 @@ public class OrderController {
 			total=orderService.getTotalPrice(userId);
 			order.setUserId(userId);
 			
-		}else if(session.getAttribute("preId") != null) {
+		}else {
 			total=orderService.getNotLoginTotalPrice((String)session.getAttribute("preId"));
 			order.setPreId((String)session.getAttribute("preId"));
 		}

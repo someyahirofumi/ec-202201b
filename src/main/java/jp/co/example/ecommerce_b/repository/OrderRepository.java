@@ -186,7 +186,7 @@ public class OrderRepository {
 	//カート内の合計金額取得(userIdをもとに検索)
 	//ログインユーザー用
 	public int getTotalPrice(Integer userId) {
-		String sql = "SELECT total_price FROM orders WHERE user_id = :userId;";
+		String sql = "SELECT total_price FROM orders WHERE user_id = :userId AND status=0";
 		SqlParameterSource param = new  MapSqlParameterSource().addValue("userId", userId);
 		List<Order> orderList = template.query(sql, param, ORDER_ROW_MAPPER);
 		if (orderList.isEmpty()) {

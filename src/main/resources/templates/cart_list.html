@@ -47,7 +47,7 @@
               <a href="favorite_list.html" th:href="@{/favorite/list}" class="navbar-link">お気に入り一覧</a
               >&nbsp;&nbsp;
               <a sec:authorize="!isAuthenticated()" href="login.html" th:href="@{/user}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
-              <a sec:authorize="isAuthenticated()" href="item_list_pizza.html" th:href="@{/user/logout}" class="navbar-link">ログアウト</a>
+              <a sec:authorize="isAuthenticated()" href="item_list_pizza.html" th:href="@{/logout}" class="navbar-link">ログアウト</a>
 					</p>
 				</div>
 				<!-- /.navbar-collapse -->
@@ -59,7 +59,6 @@
 		<div th:if="${cart == null}" th:text="${cartNullMessage}"></div>
 		<div th:if="${cart != null}">
 		<div class="container">
-		<form th:action ="@{/order/deleteCart}">
 		<div class="row">
 			<div
 				class="
@@ -128,9 +127,11 @@
 							   
 								<div class="text-center">
 								
+		<form th:action ="@{/order/deleteCart}">
 									<input type="hidden" name="subTotalPrice" th:value="${cartItem.getSubTotal()}">
 									<input type="hidden" name="orderId" th:value="${cartItem.id}">
 									<button type="submit" class="btn btn-primary" >削除</button>
+ </form>
 										
 								</div>
 							
@@ -195,7 +196,6 @@
 				
 			</div>
 		</div>
- </form>
  </div>
 		<div class="row">
 			<div class="col-xs-offset-2 col-xs-8">

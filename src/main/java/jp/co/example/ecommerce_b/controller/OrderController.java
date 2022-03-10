@@ -57,9 +57,8 @@ public class OrderController {
 	 * @return ログインしてなければログイン画面、注文情報がなければ商品一覧画面、あれば注文確認画面へ遷移
 	 */
 	@RequestMapping("/confirm")
-	public String showOrderConfirm(UpdateOrderForm form, Model model) {
-		session.setAttribute("userId", 1);
-		Integer userId = (Integer) session.getAttribute("userId");
+	public String showOrderConfirm(UpdateOrderForm form, Model model, @AuthenticationPrincipal LoginUser loginUser) {
+		Integer userId = loginUser.Getusers().getId();
 		if (userId == null) {
 			return "redirect:/login";
 		}
@@ -100,7 +99,8 @@ public class OrderController {
 	public String order(
 			@Validated UpdateOrderForm form,
 			BindingResult result,
-			Model model) throws ParseException {
+			Model model,
+			@AuthenticationPrincipal LoginUser loginUser) throws ParseException {
 		//送信時の日付をlong型で取得
 		long today = new Date().getTime();
 		
@@ -120,14 +120,14 @@ public class OrderController {
 		}
 		//1つでもエラーがあれば注文完了画面へ
 		if (result.hasErrors()) {
-			return showOrderConfirm(form, model);
+			return showOrderConfirm(form, model, loginUser);
 		}
 		//java.sql.Dateへ現時点の日付を変換
 		java.sql.Date sqlToday = new java.sql.Date(today);
 		Timestamp todayTimestamp = new Timestamp(delivaryDateTimeLong);
 		
 		//orderオブジェクトにformの値をコピー
-		Order order = orderService.showCart((Integer) session.getAttribute("userId"), 0);
+		Order order = orderService.showCart(loginUser.Getusers().getId(), 0);
 		if (order == null) {
 			return "redirect:/item/showList";
 		}
@@ -179,16 +179,33 @@ public class OrderController {
 
 	@RequestMapping("toCartList")
 	
-	public String toCartList(Model model) {
+	public String toCartList(Model model, @AuthenticationPrincipal LoginUser loginUser) {
 		
-		Order order = new Order();
-		//ログイン状態の条件分岐
-		if(session.getAttribute("userId") !=null) {
+		Order order = null;
+		String preId = (String) session.getAttribute("preId");
+		if (loginUser != null) {
 			//ログインしている
-			order=orderService.getCartList((Integer)session.getAttribute("userId"));
-		}else if(session.getAttribute("preId") != null) {
+			Integer userId = loginUser.Getusers().getId();
+			order=orderService.getCartList(userId);
+			if (order == null) {
+				order = new Order();
+				order.setUserId(userId);
+				order.setStatus(0);
+				order.setTotalPrice(0);
+				orderService.intoCart(order);
+				order=orderService.getCartList(userId);
+			}
+		} else {
 			//非ログイン
-			order=orderService.getNotLoginCartList((String)session.getAttribute("preId"));
+			order=orderService.getNotLoginCartList(preId);
+			if (order == null) {
+				order = new Order();
+				order.setPreId(preId);;
+				order.setStatus(0);
+				order.setTotalPrice(0);
+				orderService.intoCart(order);
+				order=orderService.getNotLoginCartList(preId);
+			}
 		}
 		
 		//orderListをrequestスコープに格納(orderList)
@@ -202,7 +219,7 @@ public class OrderController {
 	}
 	
 	@RequestMapping("/deleteCart")
-	public String deleteCart(Integer orderId,Integer subTotalPrice,Model model) {
+	public String deleteCart(Integer orderId,Integer subTotalPrice,Model model, @AuthenticationPrincipal LoginUser loginUser) {
 		
 		Order order = new Order();
 		
@@ -223,6 +240,6 @@ public class OrderController {
 		order.setTotalPrice(total);
 		orderService.updateOrder(order);
 		orderService.deleteCart(orderId);
-		return toCartList(model);
+		return toCartList(model, loginUser);
 	}
 }

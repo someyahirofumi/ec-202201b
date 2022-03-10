@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -50,8 +51,10 @@
               >&nbsp;&nbsp;
               <a href="order_history.html" th:href="@{/order/history}" class="navbar-link">注文履歴</a
               >&nbsp;&nbsp;
-              <a href="login.html" th:href="@{/user}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
-              <a href="item_list_pizza.html" th:href="@{/user/logout}" class="navbar-link">ログアウト</a>
+              <a href="favorite_list.html" th:href="@{/favorite/list}" class="navbar-link">お気に入り一覧</a
+              >&nbsp;&nbsp;
+              <a sec:authorize="!isAuthenticated()" href="login.html" th:href="@{/user}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
+              <a sec:authorize="isAuthenticated()" href="item_list_pizza.html" th:href="@{/user/logout}" class="navbar-link">ログアウト</a>
             </p>
           </div>
           <!-- /.navbar-collapse -->
@@ -87,7 +90,7 @@
       <div class="row">
         <div class="col-xs-offset-5 col-xs-2">
           <div class="form-group">
-            <form action="order_finished.html">
+            <form action="order_finished.html"  th:action="@{/itemList}">
               <input
                 class="form-control btn btn-warning btn-block"
                 type="submit"

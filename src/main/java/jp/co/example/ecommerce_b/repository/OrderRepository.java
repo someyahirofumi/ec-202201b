@@ -43,6 +43,7 @@ public class OrderRepository {
 			if (beforeId != nowId) {
 				Order order = new Order();
 				order.setId(nowId);
+				order.setPreId(rs.getString("pre_id"));
 				order.setTotalPrice(rs.getInt("total_price"));
 				order.setStatus(rs.getInt("status"));
 				order.setOrderDate(rs.getDate("order_date"));
@@ -95,16 +96,28 @@ public class OrderRepository {
 	 * @param status 注文状態
 	 * @return 注文情報を持ったOrderオブジェクト
 	 */
-	public Order findByUserIdAndStatus(Integer userId, Integer status) {
-		String sql = "SELECT" + " o.id as order_id," + " total_price, status,order_date,delivery_time," + " order_item_id," + " item_id,"
-				+ " i.name as item_name," + " i.price_M as item_price_M," + " i.price_L as item_price_L,"
-				+ " image_path," + " quantity," + " size," + " topping_id," + " t.name as topping_name,"
-				+ " t.price_M as topping_price_M," + " t.price_L as topping_price_L" + " FROM orders as o"
+	public Order findByUserIdAndStatus(Integer userId, Integer status, String preId) {
+		String sql = "SELECT"
+				+ " o.id as order_id, pre_id,"
+				+ " total_price, status,order_date,delivery_time,"
+				+ " oi.id as order_item_id, item_id,"
+				+ " i.name as item_name, i.price_M as item_price_M, i.price_L as item_price_L,"
+				+ " image_path, quantity, size,"
+				+ " topping_id, "
+				+ " t.name as topping_name, t.price_M as topping_price_M, t.price_L as topping_price_L"
+				+ " FROM orders as o"
 				+ " LEFT OUTER JOIN order_items as oi ON o.id = oi.order_id"
 				+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
 				+ " LEFT OUTER JOIN items as i ON oi.item_id=i.id"
-				+ " LEFT OUTER JOIN toppings as t ON ot.topping_id=t.id" + " WHERE user_id=:userId AND status=:status";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId).addValue("status", status);
+				+ " LEFT OUTER JOIN toppings as t ON ot.topping_id=t.id"
+				+ " WHERE user_id=:userId AND status=:status";
+		MapSqlParameterSource param = new MapSqlParameterSource()
+				.addValue("userId", userId)
+				.addValue("status", status);
+		if (preId != null) {
+			sql += " AND pre_id=:preId";
+			param.addValue("preId", preId);	
+		}
 
 		List<Order> orderList = template.query(sql, param, ORDER_ORDERITEM_ORDERTOPPING_EXTRACTOR);
 		if (orderList.isEmpty()) {
@@ -197,16 +210,16 @@ public class OrderRepository {
 	
 	//カートに商品追加時削除時、合計金額の変更update
 	public void updateOrder(Order order) {
-		if(order.getUserId() != null) {
-		String sql ="UPDATE orders SET total_price =:totalPrice WHERE user_id=:userId AND status=0;";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("totalPrice", order.getTotalPrice()).addValue("userId", order.getUserId());
-		template.update(sql, param);
-	}else if(order.getPreId() != null) {
-		String sql ="UPDATE orders SET total_price =:totalPrice WHERE pre_id=:preId AND status=0;";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("totalPrice", order.getTotalPrice()).addValue("preId", order.getPreId());
-		template.update(sql, param);
-
-	}
+		if(order.getPreId() != null) {
+			String sql ="UPDATE orders SET total_price =:totalPrice WHERE pre_id=:preId AND status=0;";
+			SqlParameterSource param = new MapSqlParameterSource().addValue("totalPrice", order.getTotalPrice()).addValue("preId", order.getPreId()).addValue("userId", order.getUserId());
+			template.update(sql, param);
+	
+		} else if(order.getUserId() != null) {
+			String sql ="UPDATE orders SET total_price =:totalPrice WHERE user_id=:userId AND status=0;";
+			SqlParameterSource param = new MapSqlParameterSource().addValue("totalPrice", order.getTotalPrice()).addValue("userId", order.getUserId());
+			template.update(sql, param);
+		}
 		
 	}
 	private static final RowMapper<OrderItem> ORDERITEM_ROW_MAPPER = new BeanPropertyRowMapper<>(OrderItem.class);
@@ -234,7 +247,7 @@ public class OrderRepository {
 	//全てのテーブルのデータが入っていないと動かない＝ダミーデータを入れておく必要がある？トッピングのテーブル検索は分ける必要あり？
 	public Order getCartList(Integer userId){
 		String sql = 
-				"SELECT o.id as order_id,o.total_price,oi.id as order_item_id,oi.quantity,oi.size,i.name as item_name,"
+				"SELECT o.id as order_id,o.total_price,pre_id,oi.id as order_item_id,oi.quantity,size,i.name as item_name,"
 				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,o.status as status,o.order_date,o.delivery_time,"
 						+ " i.id as item_id,i.image_path,t.name as topping_name,t.price_m as topping_price_M,t.price_l as topping_price_L"
 						+ " FROM "
@@ -259,7 +272,7 @@ public class OrderRepository {
 	//非ログインユーザー用カートリスト取得メソッド
 	public Order getNotLoginCartList(String preId){
 		String sql = 
-				"SELECT o.id as order_id,o.total_price,oi.id as order_item_id,oi.quantity,oi.size,i.name as item_name,"
+				"SELECT o.id as order_id,pre_id,o.total_price,oi.id as order_item_id,oi.quantity,size,i.name as item_name,"
 				        + "	ot.id as topping_id,i.price_m as item_price_M,i.price_l as item_price_L,o.status as status,o.order_date,o.delivery_time,"
 						+ " i.id as item_id,i.image_path,t.name as topping_name,t.price_m as topping_price_M,t.price_l as topping_price_L"
 						+ " FROM "
@@ -301,6 +314,7 @@ public class OrderRepository {
 	 */
 	public void update(Order order) {
 		String sql = "UPDATE orders SET"
+				+ " user_id=:userId,"
 				+ " status=:status,"
 				+ " order_date=:orderDate,"
 				+ " destination_name=:destinationName,"
@@ -325,11 +339,12 @@ public class OrderRepository {
 	public List<Order> findByOrderd(Integer userId) {
 		String sql = "SELECT"
 				+ " o.id as order_id,"
+				+ " pre_id,"
 				+ " status,"
 				+ " total_price,"
 				+ " order_date,"
 				+ " delivery_time,"
-				+ " order_item_id,"
+				+ " oi.id as order_item_id,"
 				+ " item_id,"
 				+ " i.name as item_name,"
 				+ " i.price_M as item_price_M,"
@@ -346,7 +361,8 @@ public class OrderRepository {
 				+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
 				+ " LEFT OUTER JOIN items as i ON oi.item_id=i.id"
 				+ " LEFT OUTER JOIN toppings as t ON ot.topping_id=t.id"
-				+ " WHERE user_id=:userId AND status!=0 AND status!=9";
+				+ " WHERE user_id=:userId AND status!=0 AND status!=9"
+				+ " ORDER BY order_date DESC,o.id DESC";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
 		
 		List<Order> orderList = template.query(sql, param, ORDER_ORDERITEM_ORDERTOPPING_EXTRACTOR);

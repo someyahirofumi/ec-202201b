@@ -20,7 +20,6 @@
   <body>
  
   
-  <form method="post" th:action="@{/intoCart/insert}" id="cartForm" >
     <div class="container">
       <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -58,8 +57,10 @@
               >&nbsp;&nbsp;
               <a href="order_history.html" th:href="@{/order/history}" class="navbar-link">注文履歴</a
               >&nbsp;&nbsp;
-              <a href="login.html" th:href="@{/user}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
-              <a href="item_list_pizza.html" th:href="@{/user/logout}" class="navbar-link">ログアウト</a>
+              <a href="favorite_list.html" th:href="@{/favorite/list}" class="navbar-link">お気に入り一覧</a
+              >&nbsp;&nbsp;
+              <a sec:authorize="!isAuthenticated()" href="login.html" th:href="@{/user}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
+              <a sec:authorize="isAuthenticated()" href="item_list_pizza.html" th:href="@{/user/logout}" class="navbar-link">ログアウト</a>
             </p>
           </div>
           <!-- /.navbar-collapse -->
@@ -71,13 +72,14 @@
           <div class="col-xs-offset-2 col-xs-8">
 
         
-            <div th:if="${session.userId != null}">
+            <div th:if="${session.userId == null}">
 
             <div th:if="${favoriteList != null}">
 
               <a th:if="${#lists.isEmpty(favoriteList)}" th:href="@{/favorite/add?itemId=} + ${item.id}"><button type="button">お気に入り登録</button></a>
               <a th:unless="${#lists.isEmpty(favoriteList)}" th:href="@{/favorite/list}">お気に入り登録済み-お気に入りリストへ-</a>
             </div>
+  <form method="post" th:action="@{/intoCart/insert}" id="cartForm" >
             <h3 class="text-center">商品詳細</h3>
             <div class="row">
               <div class="col-xs-5">
@@ -91,7 +93,7 @@
 							<div class="col-xs-5">
 								<div class="bs-component">
 									<h4 th:text=${item.name}>じゃがバターベーコン</h4>
-									<input type="hidden" id="itemNumber" th:value="${item.id}">
+									<input type="hidden" name="itemId" id="itemNumber" th:value="${item.id}">
 									<br /> <br />
 									<p th:text="${item.description}">
 										マイルドな味付けのカレーに大きくカットしたポテトをのせた、バターとチーズの風味が食欲をそそるお子様でも楽しめる商品です。</p>
@@ -147,7 +149,7 @@
 									
 										<label class="checkbox-inline"
 											th:each="toppings:${item.toppingList}"> <input
-											type="checkbox" name="topping" class="toppingCount"
+											type="checkbox" name="toppingId" class="toppingCount"
 											th:value="${toppings.id}" th:text="${toppings.name}"
 											>
 										</label>
@@ -163,7 +165,7 @@
 									<div class="col-xs-5 col-sm-5">
 										<label for="">数量:</label> <label class="control-label"
 											style="color: red" for="inputError">数量を選択してください</label> <select
-											name="area" class="form-control" 
+											name="quantity" class="form-control" 
 											id="quantity">
 											<option value="1">1</option>
 											<option value="2">2</option>
@@ -211,6 +213,7 @@
 							</div>
 						</div>
 					</div>
+	</form>
 				</div>
 			</div>
 	</div>
@@ -220,7 +223,6 @@
 	
 	
 	<script th:src="@{/js/bootstrap.min.js}"></script>
-	</form>
 	<div id="popup" class="popup">
 									<div class="content">
 									<p>カートに商品が追加されました！</p>

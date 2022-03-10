@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
@@ -60,8 +60,15 @@ public class OrderController {
 		if (userId == null) {
 			return "redirect:/login";
 		}
+		String preId = (String) session.getAttribute("preId");
 		//仮データを入れて検証
-		Order order = orderService.showCart(userId, 0);
+		Order order = null;
+		if (preId != null) {
+			order = orderService.showCart(0, 0, preId);
+		} else {
+			order = orderService.showCart(userId, 0, null);
+		}
+		System.out.println(order);
 		if (order == null) {
 			return "item_list_curry";
 		}
@@ -125,7 +132,13 @@ public class OrderController {
 		Timestamp todayTimestamp = new Timestamp(delivaryDateTimeLong);
 		
 		//orderオブジェクトにformの値をコピー
-		Order order = orderService.showCart(loginUser.Getusers().getId(), 0);
+		String preId = (String) session.getAttribute("preId");
+		Order order = null;
+		if (preId != null) {
+			order = orderService.showCart(0, 0, preId);
+		} else {
+			order = orderService.showCart(loginUser.Getusers().getId(), 0, null);
+		}
 		if (order == null) {
 			return "redirect:/item/showList";
 		}
@@ -133,6 +146,7 @@ public class OrderController {
 		
 		//コピーできなかった値を手動でコピー
 		order.setId(order.getId());
+		order.setUserId(loginUser.Getusers().getId());
 		order.setOrderDate(sqlToday);
 		order.setDeliveryTime(todayTimestamp);
 		order.setPaymentMethod(form.getIntPaymentMethod());
@@ -170,6 +184,7 @@ public class OrderController {
 		}
 		Integer userId = loginUser.Getusers().getId();
 		List<Order> orderList = orderService.getHistory(userId);
+		System.out.println(orderList.size());
 		model.addAttribute("orderList", orderList);
 		return "order_history";
 	}
@@ -184,20 +199,32 @@ public class OrderController {
 		if (loginUser != null) {
 			//ログインしている
 			Integer userId = loginUser.Getusers().getId();
-			order=orderService.getCartList(userId);
-			if (order == null) {
+			if (orderService.getNotLoginCartList(preId) != null) {
+				//ログイン前にカートを作った
+				order = orderService.getNotLoginCartList(preId);
+			} else if (orderService.getCartList(userId) != null) {
+				//ログイン後にカートを作っていた
+				order = orderService.getCartList(userId);
+			} else {
+				//ログイン前も後もカートがなかった
 				order = new Order();
 				order.setUserId(userId);
 				order.setStatus(0);
 				order.setTotalPrice(0);
 				orderService.intoCart(order);
-				order=orderService.getCartList(userId);
 			}
 		} else {
 			//非ログイン
 			order=orderService.getNotLoginCartList(preId);
+			//カートがない＝ログイン前に初めてカートを作る
 			if (order == null) {
+				//UUIDをセット
+				UUID uuID= UUID.randomUUID();
+				preId = uuID.toString();
+				session.setAttribute("preId", preId);
+				
 				order = new Order();
+				order.setUserId(0);
 				order.setPreId(preId);;
 				order.setStatus(0);
 				order.setTotalPrice(0);
@@ -208,11 +235,12 @@ public class OrderController {
 		
 		
 		//orderListをrequestスコープに格納(orderList)
-		if(order == null || order.getOrderItemList().isEmpty()) {
+		if(order == null) {
 			model.addAttribute("cartNullMessage","カートに商品がありません");
-		}else {
-			
-		model.addAttribute("cart",order);
+		} else if(order.getOrderItemList().isEmpty()) {
+			model.addAttribute("cartNullMessage","カートに商品がありません");
+		} else {
+			model.addAttribute("cart",order);
 		}
 		return "cart_list";
 	}
@@ -226,10 +254,11 @@ public class OrderController {
 	
 		int total=0;
 		//ログイン状態の分岐
-		if(session.getAttribute("userId") != null) {
+		if(loginUser != null) {
 			//ログインユーザーの処理
-			total=orderService.getTotalPrice((Integer)session.getAttribute("userId"));
-			order.setUserId((Integer)session.getAttribute("userId"));
+			Integer userId = loginUser.Getusers().getId();
+			total=orderService.getTotalPrice(userId);
+			order.setUserId(userId);
 			
 		}else if(session.getAttribute("preId") != null) {
 			total=orderService.getNotLoginTotalPrice((String)session.getAttribute("preId"));

@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()// 認可に関する設定
 		
 		//ログイン前に閲覧できないページを指定する
-	    .antMatchers("/order/confirm").authenticated()
+	    .antMatchers("/order/confirm", "/order/history").authenticated()
 	    // それ以外のパスは認証不要
 		.anyRequest().permitAll();
 
@@ -49,9 +49,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	    .defaultSuccessUrl("/itemList");//ログイン成功時の遷移先
 	
 	http.logout() // ログアウトに関する設定
-	    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-	    .logoutUrl("/logout")
-	    .logoutSuccessUrl("/itemList");
+	    .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // ログアウトさせる際に遷移させるパス
+		.logoutSuccessUrl("/itemList") // ログアウト後に遷移させるパス(ここではログイン画面を設定)
+		.deleteCookies("JSESSIONID") // ログアウト後、Cookieに保存されているセッションIDを削除
+		.invalidateHttpSession(true);
 	
         
         

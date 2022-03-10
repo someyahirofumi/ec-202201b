@@ -5,7 +5,7 @@ package jp.co.example.ecommerce_b.controller;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -61,8 +61,7 @@ public class OrderController {
 		}
 		Integer userId = loginUser.Getusers().getId();
 		String preId = (String) session.getAttribute("preId");
-		//仮データを入れて検証
-		System.out.println(preId);
+		
 		Order order = null;
 		if (orderService.showCart(0, 0, preId) != null) {
 			order = orderService.showCart(0, 0, preId);
@@ -110,18 +109,21 @@ public class OrderController {
 		long today = new Date().getTime();
 		
 		//入力された日付と時刻を文字列として結合したあとにlong型でフォーマット
-		String delivaryDateTime = form.getDeliveryDate() + " " + form.getDeliveryTime();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh");
-		long delivaryDateTimeLong = sdf.parse(delivaryDateTime).getTime();
-		
-		//時刻を比較して時間差を抽出
-		long diff = delivaryDateTimeLong - today;
-		TimeUnit time = TimeUnit.HOURS;
-		long difference = time.convert(diff, TimeUnit.MILLISECONDS);
-		
-		//時間差が3時間より小さけれればエラー文を格納
-		if (difference < 3) {
-			result.rejectValue("deliveryDate", null, "今から3時間後の日時をご入力ください");
+		long delivaryDateTimeLong = 0;
+		if (!form.getDeliveryDate().isBlank()) {
+			String delivaryDateTime = form.getDeliveryDate() + " " + form.getDeliveryTime();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh");
+			delivaryDateTimeLong = sdf.parse(delivaryDateTime).getTime();
+			
+			//時刻を比較して時間差を抽出
+			long diff = delivaryDateTimeLong - today;
+			TimeUnit time = TimeUnit.HOURS;
+			long difference = time.convert(diff, TimeUnit.MILLISECONDS);
+			
+			//時間差が3時間より小さけれればエラー文を格納
+			if (difference < 3) {
+				result.rejectValue("deliveryDate", null, "今から3時間後の日時をご入力ください");
+			}
 		}
 		//1つでもエラーがあれば注文完了画面へ
 		if (result.hasErrors()) {

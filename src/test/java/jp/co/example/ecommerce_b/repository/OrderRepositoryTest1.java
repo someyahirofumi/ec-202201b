@@ -108,9 +108,16 @@ class OrderRepositoryTest1 {
 		OrderItem orderItem = new OrderItem();
 		orderItem.setItemId(2);
 		orderItem.setOrderId(orderId);
-		orderItem.setSize('K');
+		orderItem.setSize('L');
 		orderItem.setQuantity(3);
 		orderRepository.insertItem(orderItem);
+		char orderSize=template.queryForObject("select size from order_items where order_id=:orderId;", new MapSqlParameterSource().addValue("orderId", orderId), char.class);
+		Integer orderItemId=template.queryForObject("select item_id from order_items where order_id=:orderId;", new MapSqlParameterSource().addValue("orderId", orderId), Integer.class);
+		Integer orderItemQuantity=template.queryForObject("select quantity from order_items where order_id=:orderId;", new MapSqlParameterSource().addValue("orderId", orderId), Integer.class);
+		assertEquals(orderSize,'L',"サイズ登録ができていません");
+		assertEquals(orderItemId,2,"itemId登録ができていません");
+		assertEquals(orderItemQuantity,3,"数量登録ができていません");
+		
 		
 		
 	}

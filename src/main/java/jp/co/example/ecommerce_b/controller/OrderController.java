@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jp.co.example.ecommerce_b.domain.LoginUser;
 import jp.co.example.ecommerce_b.domain.Order;
 import jp.co.example.ecommerce_b.domain.OrderItem;
 import jp.co.example.ecommerce_b.domain.OrderTopping;
@@ -163,14 +165,14 @@ public class OrderController {
 	 * @return
 	 */
 	@RequestMapping("/history")
-	public String showHistrory(Model model) {
-		//セッションからuserIdを取得
-		Integer userId = (Integer) session.getAttribute("userId");
-		
-		//List<Order> orderList = orderService.getHistory(1);
+	public String showHistrory(Model model, @AuthenticationPrincipal LoginUser loginUser) {
+		//ログインチェック
+		if (loginUser == null) {
+			return "redirect:/";
+		}
+		Integer userId = loginUser.Getusers().getId();
 		List<Order> orderList = orderService.getHistory(userId);
 		model.addAttribute("orderList", orderList);
-		//System.out.println(orderList);
 		return "order_history";
 	}
 	

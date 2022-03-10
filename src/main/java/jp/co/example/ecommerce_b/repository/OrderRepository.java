@@ -308,7 +308,7 @@ public class OrderRepository {
 				+ " destination_zipcode=:destinationZipcode,"
 				+ " destination_address=:destinationAddress,"
 				+ " destination_tel=:destinationTel,"
-				+ " delivery_time=:delivaryTime,"
+				+ " delivery_time=:deliveryTime,"
 				+ " payment_method=:paymentMethod"
 				+ " WHERE id=:id";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(order);

@@ -94,6 +94,27 @@ class OrderRepositoryTest1 {
 		System.out.println("合計金額取得テスト完了");
 	}
 	
+	@Test
+	public void testInsert() {
+		System.out.println("insertテスト");
+		Order order = new Order();
+		order.setUserId(100);
+		order.setStatus(0);
+		order.setTotalPrice(5000);
+		orderRepository.intoCart(order);
+		int total = template.queryForObject("select total_price from orders where user_id=100;" , new MapSqlParameterSource(), Integer.class);
+		assertEquals(total,5000,"insertができていません");
+		Integer orderId=template.queryForObject("select max(id) from orders", new MapSqlParameterSource(), Integer.class);
+		OrderItem orderItem = new OrderItem();
+		orderItem.setItemId(2);
+		orderItem.setOrderId(orderId);
+		orderItem.setSize('K');
+		orderItem.setQuantity(3);
+		orderRepository.insertItem(orderItem);
+		
+		
+	}
+	
 	
 
 }

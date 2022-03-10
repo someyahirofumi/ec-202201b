@@ -69,7 +69,12 @@
 
         <div class="row">
           <div class="col-xs-offset-2 col-xs-8">
+
+        
+            <div th:if="${session.userId != null}">
+
             <div th:if="${favoriteList != null}">
+
               <a th:if="${#lists.isEmpty(favoriteList)}" th:href="@{/favorite/add?itemId=} + ${item.id}"><button type="button">お気に入り登録</button></a>
               <a th:unless="${#lists.isEmpty(favoriteList)}" th:href="@{/favorite/list}">お気に入り登録済み-お気に入りリストへ-</a>
             </div>
@@ -193,6 +198,12 @@
 						<div class="col-xs-offset-2 col-xs-3">
 							<div class="form-group">
 								<p>
+								<a th:href="@{/itemList}">
+									<input class="form-control btn btn-warning btn-block"
+										type="button" value="商品リストへ戻る" />
+										</a>
+								</p>
+								<p>
 									<input class="form-control btn btn-warning btn-block"
 										type="submit" value="カートに入れる" />
 								</p>
@@ -202,7 +213,7 @@
 					</div>
 				</div>
 			</div>
-	
+	</div>
 		
 	</div>
 	<!-- end container -->

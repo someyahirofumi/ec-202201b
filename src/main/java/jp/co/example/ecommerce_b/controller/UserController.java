@@ -108,9 +108,10 @@ public class UserController {
 			System.out.println("失敗");
 			model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
 		}
-		
+		System.out.println("ログイン画面表示処理通過");
 		//ログイン済みの場合
 				if(session.getAttribute("userInfo") != null) {
+					System.out.println("ログイン済みの場合の処理通過");
 					return "/item_list_curry";
 				}
 				
@@ -135,15 +136,20 @@ public class UserController {
 	 */
 	@RequestMapping("/login")
 	public String Login(String email,String password,Model model) {
-		
+		System.out.println("ログイン処理通過");
+		//ログイン済みの場合
+		if(session.getAttribute("userInfo") != null) {
+			System.out.println("ログイン済みの場合の処理通過");
+			return "/item_list_curry";
+		}
 		
 		//以下、Spring Security にて実装のためコメントアウト
 		//入力されたメールアドレス、パスワードからユーザー情報を検索
 		//検索結果が０件のとき、エラーメッセージを表示
 		//if(userservice.Login(email, password) == null) {
-		//	System.out.println("失敗");
-		//	model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
-		//	return "/user/";
+		//System.out.println("失敗");
+		//model.addAttribute("errorMessage","メールアドレス、またはパスワードが間違っています");
+		//return "/user/";
 		//}
 		
 		//sessionにユーザー情報を格納(idだけで良い？)
@@ -153,13 +159,27 @@ public class UserController {
 		//遷移先の判定
 		//(sessionスコープにuuidが存在するかの確認)
 		if(session.getAttribute("preID") != null) {
-			return "/item_detail";
+			return "forword:/item_detail";
 		}
 		
 		
 		//仮で注文一覧画面を表示
-		return "/itemlist";
+		return "forword:/itemList";
 	}
+	@RequestMapping("/loginselect")
+	public String Loginselect(String email,String password) {
+		//sessionにユーザー情報を格納(idだけで良い？)
+		session.setAttribute("userInfo",userservice.Login(email, password));
+		//遷移先の判定
+				//(sessionスコープにuuidが存在するかの確認)
+				if(session.getAttribute("preID") != null) {
+					return "forword:/toItemDetail";
+				}else {
+					return "forword:/itemList";
+				}
+		}
+	
+	
 		/**
 		 * ログアウト処理
 		 * 
@@ -171,7 +191,8 @@ public class UserController {
 		@RequestMapping("/logout")
 		public String Logout() {
 		session.removeAttribute("userInfo");
-		return "/user/";
+		session.removeAttribute("preID");
+		return "forword:/itemList";
 	}
 }
 

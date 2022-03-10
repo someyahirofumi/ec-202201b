@@ -194,44 +194,6 @@ public class OrderController {
 	
 	public String toCartList(Model model, @AuthenticationPrincipal LoginUser loginUser) {
 		
-//		Order order = null;
-//		String preId = (String) session.getAttribute("preId");
-//		if (loginUser != null) {
-//			//ログインしている
-//			Integer userId = loginUser.Getusers().getId();
-//			if (orderService.getNotLoginCartList(preId) != null) {
-//				//ログイン前にカートを作った
-//				order = orderService.getNotLoginCartList(preId);
-//			} else if (orderService.getCartList(userId) != null) {
-//				//ログイン後にカートを作っていた
-//				order = orderService.getCartList(userId);
-//			} else {
-//				//ログイン前も後もカートがなかった
-//				order = new Order();
-//				order.setUserId(userId);
-//				order.setStatus(0);
-//				order.setTotalPrice(0);
-//				orderService.intoCart(order);
-//			}
-//		} else {
-//			//非ログイン
-//			order=orderService.getNotLoginCartList(preId);
-//			//カートがない＝ログイン前に初めてカートを作る
-//			if (order == null) {
-//				//UUIDをセット
-//				UUID uuID= UUID.randomUUID();
-//				preId = uuID.toString();
-//				session.setAttribute("preId", preId);
-//				
-//				order = new Order();
-//				order.setUserId(0);
-//				order.setPreId(preId);;
-//				order.setStatus(0);
-//				order.setTotalPrice(0);
-//				orderService.intoCart(order);
-//				order=orderService.getNotLoginCartList(preId);
-//			}
-//		}
 		Order order = new Order();
 		//ログイン状態の条件分岐
 		if(loginUser !=null) {

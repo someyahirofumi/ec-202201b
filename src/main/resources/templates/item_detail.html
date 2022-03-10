@@ -20,7 +20,7 @@
   <body>
  
   
-  <form method="post" th:action="@{/intoCart/insert}" id="cartForm">
+  <form method="post" th:action="@{/intoCart/insert}" id="cartForm" >
     <div class="container">
       <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -194,7 +194,7 @@
 							<div class="form-group">
 								<p>
 									<input class="form-control btn btn-warning btn-block"
-										id="toCartButton" type="submit" value="カートに入れる" />
+										type="submit" value="カートに入れる" />
 								</p>
 								
 							</div>
@@ -202,20 +202,21 @@
 					</div>
 				</div>
 			</div>
+	
 		
-		<div id="popup" class="popup">
+	</div>
+	<!-- end container -->
+	
+	
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	</form>
+	<div id="popup" class="popup">
 									<div class="content">
 									<p>カートに商品が追加されました！</p>
 									<button id="close">閉じる</button>
 									<a th:href="@{/order/toCartList}">ショッピングカートへ</a>
 									</div>
 		</div>
-	</div>
-	<!-- end container -->
-	
-	
-	<script th:src="@{/js/bootstrap.min.js}"></script>
-</form>
 </body>
     <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>

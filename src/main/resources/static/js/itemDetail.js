@@ -45,8 +45,9 @@ $(function() {
 		$("#total-price").text(price.toLocaleString());
 	}
 
-	$("#cartForm").on('submit', function(e) {
+	$("#cartForm").on('submit', function(e){
 		e.preventDefault();
+	
 		console.log("処理開始");
 		
 		let toppingList = [];
@@ -80,7 +81,7 @@ $(function() {
 			console.log("textStatus     : " + textStatus);
 			console.log("errorThrown    : " + errorThrown.message);
 		})
-
+	return false;
 
 	});
 	$('#close').on('click', function() {

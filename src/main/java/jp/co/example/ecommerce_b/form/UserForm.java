@@ -4,6 +4,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.Length;
+
 /**
  * ユーザー情報の値の引き渡しを行うフォーム
  * 
@@ -23,6 +25,7 @@ public class UserForm {
 	  
 	  /** パスワード */
 	@NotBlank(message="パスワードを入力してください")
+	@Length(min=8,max=16,message="パスワードは8文字以上16文字以内で入力してください")
 	  private String password;
 	  
 	  /** 郵便番号 */

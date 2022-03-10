@@ -30,6 +30,7 @@ public class UserRepository {
 		user.setName(rs.getString("name"));
 		user.setEmail(rs.getString("email"));
 		user.setZipcode(rs.getString("zipcode"));
+		user.setAddress(rs.getString("address"));
 		user.setTelephone(rs.getString("telephone"));
 		user.setPassword(rs.getString("password"));
 		
@@ -43,7 +44,7 @@ public class UserRepository {
 	 *
 	 */
 	public List<Users> emailCheck(String email) {
-		String sql = "SELECT id,name,email,zipcode,telephone,password FROM users WHERE email = :email";
+		String sql = "SELECT id,name,email,zipcode,address,telephone,password FROM users WHERE email = :email";
 		SqlParameterSource param = new MapSqlParameterSource ().addValue("email", email);
 		
 		List<Users>userList = template.query(sql, param, USER_ROW_MAPPER);
@@ -77,7 +78,7 @@ public class UserRepository {
 	 */
 	public Users Login(String email,String password) {
 		//idだけ取ることは可能？？
-		String sql = "SELECT id,name,email,zipcode,telephone,password FROM users WHERE email = :email AND password = :password";
+		String sql = "SELECT id,name,email,zipcode,address,telephone,password FROM users WHERE email = :email AND password = :password";
 		SqlParameterSource param = new MapSqlParameterSource ().addValue("email", email).addValue("password", password);
 		
 		List<Users>userList = template.query(sql, param, USER_ROW_MAPPER);
@@ -94,7 +95,7 @@ public class UserRepository {
 	 */
 	public Users searchPassword(String email) {
 		//idだけ取ることは可能？？
-		String sql = "SELECT id,name,email,zipcode,telephone,password FROM users WHERE email = :email";
+		String sql = "SELECT id,name,email,zipcode,address,telephone,password FROM users WHERE email = :email";
 		SqlParameterSource param = new MapSqlParameterSource ().addValue("email", email);
 		
 		List<Users>userList = template.query(sql, param, USER_ROW_MAPPER);

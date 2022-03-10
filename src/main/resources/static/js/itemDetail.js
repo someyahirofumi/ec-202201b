@@ -3,7 +3,7 @@
 
 
 $(function() {
-	    var token = $("meta[name='_csrf']").attr("content");
+	var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
     $(document).ajaxSend(function(e, xhr, options) {
       xhr.setRequestHeader(header, token);
@@ -45,8 +45,10 @@ $(function() {
 		$("#total-price").text(price.toLocaleString());
 	}
 
-	$("#intoCartForm").on('submit', function(e) {
+	$("#cartForm").on('submit', function(e){
 		e.preventDefault();
+	
+		console.log("処理開始");
 		
 		let toppingList = [];
 		$('[class="toppingCount"]:checked').each(function() {
@@ -57,7 +59,7 @@ $(function() {
 
 
 		$.ajax({
-			url: 'http://localhost:8080/ec-202201b/intoCart/insert',
+			url: $(this).attr("action"),
 			type: 'post',
 			dataType: 'text',
 			data: {
@@ -79,7 +81,7 @@ $(function() {
 			console.log("textStatus     : " + textStatus);
 			console.log("errorThrown    : " + errorThrown.message);
 		})
-
+	return false;
 
 	});
 	$('#close').on('click', function() {

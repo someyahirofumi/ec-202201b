@@ -44,14 +44,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	http.formLogin() // ログインに関する設定
 		.loginPage("/user/") // ログイン画面に遷移させるパス(ログイン認証が必要なパスを指定してかつログインされていないとこのパスに遷移される)
 		.loginProcessingUrl("/user/login") // ログインボタンを押した際に遷移させるパス(ここに遷移させれば自動的にログインが行われる)
-	    .usernameParameter("email") // 認証時に使用するユーザ名のリクエストパラメータ名(今回はメールアドレスを使用)
+        .usernameParameter("email") // 認証時に使用するユーザ名のリクエストパラメータ名(今回はメールアドレスを使用)
 	    .passwordParameter("password")// 認証時に使用するパスワードのリクエストパラメータ名
-	    .defaultSuccessUrl("/toItemDetail");//ログイン成功時の遷移先
+	    .defaultSuccessUrl("/itemList");//ログイン成功時の遷移先
 	
 	http.logout() // ログアウトに関する設定
 	    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 	    .logoutUrl("/logout")
-	    .logoutSuccessUrl("/login");
+	    .logoutSuccessUrl("/itemList");
 	
         
         

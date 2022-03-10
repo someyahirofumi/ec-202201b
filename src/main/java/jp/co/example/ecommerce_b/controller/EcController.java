@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jp.co.example.ecommerce_b.domain.Favorite;
 
 import jp.co.example.ecommerce_b.domain.Item;
-
+import jp.co.example.ecommerce_b.domain.LoginUser;
 import jp.co.example.ecommerce_b.form.ItemsearchForm;
 
 import jp.co.example.ecommerce_b.domain.Topping;
@@ -55,7 +56,7 @@ public class EcController {
 	 * @return 商品詳細画面へフォワード
 	 */
 	@RequestMapping("/toItemDetail")
-	public String toItemDetail(Integer itemId, Model model) {
+	public String toItemDetail(Integer itemId, Model model,  @AuthenticationPrincipal LoginUser loginUser) {
 //		System.out.println("システム起動");
 		Item item = itemService.findByItemId(itemId);
 		// Item item = itemService.findByItemId(1);
@@ -64,10 +65,11 @@ public class EcController {
 
 		item.setToppingList(toppingList);
 
-		session.setAttribute("userId", 1);
-		Integer userId = (Integer) session.getAttribute("userId");
-		List<Favorite> favoriteList = favoriteService.confirmFavorite(userId, itemId);
-		model.addAttribute("favoriteList", favoriteList);
+		if (loginUser != null) {
+			Integer userId = loginUser.Getusers().getId();
+			List<Favorite> favoriteList = favoriteService.confirmFavorite(userId, itemId);
+			model.addAttribute("favoriteList", favoriteList);
+		}
 		model.addAttribute("item", item);
 //		System.out.println(item);
 //		System.out.println(toppingList);

@@ -34,8 +34,10 @@ public class IntoCartApiController {
 	public void insert(Integer priceM,Integer priceL,Integer itemId,char size,String toppingId,Integer quantity) {
 		List<String> toppingIds= Arrays.asList(toppingId.split(","));
 		List<Integer> toIntToppingIds= new ArrayList<>();
+		if(!(toppingId.equals(""))){
 		for(String ids:toppingIds) {
 			toIntToppingIds.add(Integer.parseInt(ids));
+		}
 		}
 	
 //		

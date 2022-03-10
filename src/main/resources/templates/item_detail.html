@@ -8,12 +8,19 @@
 <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
 <link th:href="@{/css/piza.css}" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script th:src="@{/js/itemDetail.js}"></script>
+ 
   </head>
   <body>
+ 
+  
+  <form method="post" th:action="@{/intoCart/insert}" id="cartForm" >
     <div class="container">
       <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -60,7 +67,6 @@
         <!-- /.container-fluid -->
       </nav>
 
-      <form action="cart_list.html" th:action="@{/order/intoCart?itemId=}+${item.id}" th:object="${intoCartForm}">
         <div class="row">
           <div class="col-xs-offset-2 col-xs-8">
             <div th:if="${session.userId != null}">
@@ -112,7 +118,7 @@
 											class="price">&nbsp;Ｌ</span> >&nbsp;&nbsp;<span
 											th:text="${#numbers.formatInteger(item.priceL,4,'COMMA')}"
 											id="sizeLprice" th:value="${item.priceL}"
-											th:field="*{priceL}">2,380</span> 円(税抜)
+											>2,380</span> 円(税抜)
 										</label>
 
 
@@ -133,30 +139,7 @@
 										</label>
 									</div>
 									<div class="col-sm-12" id="topping">
-										<!--   <label class="checkbox-inline">
-                        <input type="checkbox" value="" />オニオン
-                      </label>
-                      <label class="checkbox-inline">
-                        <input type="checkbox" value="" />チーズ
-                      </label>
-                      <label class="checkbox-inline">
-                        <input type="checkbox" value="" />ピーマン
-                      </label>
-                      <label class="checkbox-inline">
-                        <input type="checkbox" value="" />ロースハム </label
-                      ><br />
-                      <label class="checkbox-inline">
-                        <input type="checkbox" value="" />ほうれん草
-                      </label>
-                      <label class="checkbox-inline">
-                        <input type="checkbox" value="" />ぺパロに
-                      </label>
-                      <label class="checkbox-inline">
-                        <input type="checkbox" value="" />グリルナス
-                      </label>
-                      <label class="checkbox-inline">
-                        <input type="checkbox" value="" />あらびきソーセージ
-                      </label>  -->
+									
 										<label class="checkbox-inline"
 											th:each="toppings:${item.toppingList}"> <input
 											type="checkbox" name="topping" class="toppingCount"
@@ -211,7 +194,7 @@
 							<div class="form-group">
 								<p>
 									<input class="form-control btn btn-warning btn-block"
-										id="toCartButton" type="submit" value="カートに入れる" />
+										type="submit" value="カートに入れる" />
 								</p>
 								
 							</div>
@@ -219,20 +202,22 @@
 					</div>
 				</div>
 			</div>
-		</form>
-		<div id="popup" class="popup">
+	
+		
+	</div>
+	<!-- end container -->
+	
+	
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	</form>
+	<div id="popup" class="popup">
 									<div class="content">
 									<p>カートに商品が追加されました！</p>
 									<button id="close">閉じる</button>
 									<a th:href="@{/order/toCartList}">ショッピングカートへ</a>
 									</div>
 		</div>
-	</div>
-	<!-- end container -->
-	<script th:src="@{/js/itemDetail.js}"></script>
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script th:src="@{/js/bootstrap.min.js}"></script>
-
 </body>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </html>

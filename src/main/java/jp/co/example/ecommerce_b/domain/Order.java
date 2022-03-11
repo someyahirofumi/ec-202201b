@@ -33,6 +33,12 @@ public class Order {
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
+	public String getPreId() {
+		return preId;
+	}
+	public void setPreId(String preId) {
+		this.preId = preId;
+	}
 	public Integer getStatus() {
 		return status;
 	}
@@ -110,15 +116,16 @@ public class Order {
 	@Override
 	public String toString() {
 		return "Order [id=" + id + ", userId=" + userId
-				+ ", status=" + status + ", totalPrice="
-				+ totalPrice + ", orderDate=" + orderDate
+				+ ", preId=" + preId + ", status=" + status
+				+ ", totalPrice=" + totalPrice
+				+ ", orderDate=" + orderDate
 				+ ", destinationName=" + destinationName
 				+ ", destinationEmail=" + destinationEmail
 				+ ", destinationZipcode="
 				+ destinationZipcode
 				+ ", destinationAddress="
 				+ destinationAddress + ", destinationTel="
-				+ destinationTel + ", delivaryTime="
+				+ destinationTel + ", deliveryTime="
 				+ deliveryTime + ", paymentMethod="
 				+ paymentMethod + ", user=" + user
 				+ ", orderItemList=" + orderItemList + "]";
@@ -128,12 +135,6 @@ public class Order {
 	}
 	public int getCalcTotalPrice() {
 		return totalPrice+getTax();
-	}
-	public String getPreId() {
-		return preId;
-	}
-	public void setPreId(String preId) {
-		this.preId = preId;
 	}
 
 }

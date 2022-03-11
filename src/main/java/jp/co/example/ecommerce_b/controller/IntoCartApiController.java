@@ -8,11 +8,13 @@ import java.util.UUID;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import jp.co.example.ecommerce_b.domain.LoginUser;
 import jp.co.example.ecommerce_b.domain.Order;
 import jp.co.example.ecommerce_b.domain.OrderItem;
 import jp.co.example.ecommerce_b.domain.OrderTopping;
@@ -31,7 +33,7 @@ public class IntoCartApiController {
 	
 	
 	@RequestMapping(value="/insert",method=RequestMethod.POST)
-	public void insert(Integer priceM,Integer priceL,Integer itemId,char size,String toppingId,Integer quantity) {
+	public void insert(Integer priceM,Integer priceL,Integer itemId,char size,String toppingId,Integer quantity,@AuthenticationPrincipal LoginUser loginUser) {
 		List<String> toppingIds= Arrays.asList(toppingId.split(","));
 		List<Integer> toIntToppingIds= new ArrayList<>();
 		if(!(toppingId.equals(""))){
@@ -77,22 +79,23 @@ public class IntoCartApiController {
 		order.setTotalPrice(total);
 		order.setStatus(0);
 		//ログインしているか否か判定
-		if(session.getAttribute("userId") !=null) {
+		if(loginUser != null) {
 			//ログインしている場合の処理
+			Integer userId = loginUser.Getusers().getId();
 			//userIdをorderオブジェクトにセット
-			order.setUserId((Integer)session.getAttribute("userId") );
+			order.setUserId(userId);
 			//カート内に商品があるか否かの判定のためuserIdでordersテーブルを検索
-			 orderId=orderService.getOrderId((int)session.getAttribute("userId"));
+			 orderId=orderService.getOrderId(userId);
 			if(orderId ==0) {
 				//カートが空の状態時の処理
 				//orderテーブルへのinsert処理(カートへの新規追加)
 				orderService.intoCart(order);
 				//直前でinsertしたorderのIDを取得
-				orderId=orderService.getOrderId((int)session.getAttribute("userId"));
+				orderId=orderService.getOrderId(userId);
 			}else {
 				//カートが空じゃない場合の処理
 				//既にカートに入っている合計金額を取得
-				Integer preTotal= orderService.getTotalPrice((Integer)session.getAttribute("userId"));
+				Integer preTotal= orderService.getTotalPrice(userId);
 				//今カートに追加した商品の金額をカートリスト合計と合わせる
 				total += preTotal;
 				order.setTotalPrice(total);
@@ -105,9 +108,9 @@ public class IntoCartApiController {
 			//ログインしていない状態の処理
 			//userIdを0でセット(userIdはNot Null設定のため)
 			order.setUserId(0);
-			
+			String preId = (String) session.getAttribute("preId");
 			//preIdが発行されていない＝カートに商品がない状態
-			if(session.getAttribute("preId") ==null) {
+			if(orderService.getNotLoginCartList(preId) ==null) {
 				//カートが空の状態時の処理
 				//新規にpreIdを作成オブジェクトにセット
 				

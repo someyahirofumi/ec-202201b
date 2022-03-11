@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -43,8 +44,10 @@
               >&nbsp;&nbsp;
               <a href="order_history.html" th:href="@{/order/history}" class="navbar-link">注文履歴</a
               >&nbsp;&nbsp;
-              <a href="login.html" th:href="@{/user}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
-              <a href="item_list_pizza.html" th:href="@{/user/logout}" class="navbar-link">ログアウト</a>
+              <a href="favorite_list.html" th:href="@{/favorite/list}" class="navbar-link">お気に入り一覧</a
+              >&nbsp;&nbsp;
+              <a sec:authorize="!isAuthenticated()" href="login.html" th:href="@{/user}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
+              <a sec:authorize="isAuthenticated()" href="item_list_pizza.html" th:href="@{/logout}" class="navbar-link">ログアウト</a>
 					</p>
 				</div>
 				<!-- /.navbar-collapse -->
@@ -56,7 +59,6 @@
 		<div th:if="${cart == null}" th:text="${cartNullMessage}"></div>
 		<div th:if="${cart != null}">
 		<div class="container">
-		<form th:action ="@{/order/deleteCart}">
 		<div class="row">
 			<div
 				class="
@@ -125,9 +127,11 @@
 							   
 								<div class="text-center">
 								
+		<form th:action ="@{/order/deleteCart}">
 									<input type="hidden" name="subTotalPrice" th:value="${cartItem.getSubTotal()}">
 									<input type="hidden" name="orderId" th:value="${cartItem.id}">
 									<button type="submit" class="btn btn-primary" >削除</button>
+ </form>
 										
 								</div>
 							
@@ -192,7 +196,6 @@
 				
 			</div>
 		</div>
- </form>
  </div>
 		<div class="row">
 			<div class="col-xs-offset-2 col-xs-8">

@@ -33,8 +33,8 @@ public class OrderService {
 	 * @param status 注文状態
 	 * @return カート情報が入ったOrderオブジェクト
 	 */
-	public Order showCart(Integer userId, Integer status) {
-		return orderRepository.findByUserIdAndStatus(userId, status);
+	public Order showCart(Integer userId, Integer status, String preId) {
+		return orderRepository.findByUserIdAndStatus(userId, status, preId);
 	}
 	
 	/**

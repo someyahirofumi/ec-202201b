@@ -68,7 +68,7 @@ class ConfirmOrderRepositoryTest {
 	void load() {
 		System.out.println("ユーザーIdとステータスで検索するテスト開始");
 		
-		Order order = orderRepository.findByUserIdAndStatus(1, 0);
+		Order order = orderRepository.findByUserIdAndStatus(1, 0, "1");
 		assertNotNull(order, "注文情報がありません");
 		assertEquals(4760, order.getTotalPrice(), "金額が不一致");
 		assertFalse(order.getOrderItemList().isEmpty(), "商品が追加されていません");

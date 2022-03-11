@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -50,8 +51,10 @@
               >&nbsp;&nbsp;
               <a href="order_history.html" th:href="@{/order/history}" class="navbar-link">注文履歴</a
               >&nbsp;&nbsp;
-              <a href="login.html" th:href="@{/user}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
-              <a href="item_list_pizza.html" th:href="@{/user/logout}" class="navbar-link">ログアウト</a>
+              <a href="favorite_list.html" th:href="@{/favorite/list}" class="navbar-link">お気に入り一覧</a
+              >&nbsp;&nbsp;
+              <a sec:authorize="!isAuthenticated()" href="login.html" th:href="@{/user}" class="navbar-link">ログイン</a>&nbsp;&nbsp;
+              <a sec:authorize="isAuthenticated()" href="item_list_pizza.html" th:href="@{/logout}" class="navbar-link">ログアウト</a>
             </p>
           </div>
           <!-- /.navbar-collapse -->
@@ -72,13 +75,13 @@
             col-xs-12
           "
         >
-          <p class="lead text-center" th:if="${orderList == null}" th:text="注文履歴が存在しません"></p>
-          <table th:unless="${orderList == null}" class="table table-striped item-list-table">
+          <p class="lead text-center" th:if="${#lists.isEmpty(orderList)}" th:text="注文履歴が存在しません"></p>
+          <table th:unless="${#lists.isEmpty(orderList)}" class="table table-striped item-list-table">
             <tbody>
-              <tr>
-                <th class="row" th:each="order : ${orderList}">
-                  <th:block th:each="orderItem,status : ${order.orderItemList}">
+              <tr th:each="order,status : ${orderList}">
+                <th class="row">
 		                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+		                  <th:block th:each="orderItem,status : ${order.orderItemList}">
 	                    <img
                         th:if="${status.index == 0}"
 	                      src="../static/img_curry/1.jpg"
@@ -87,9 +90,12 @@
 	                      width="200"
 	                      height="600"
 	                    />
+		                </th:block>
 		                </div>
                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 text-left">
-                      <p>他<span th:text="${status.count - 1}"></span>件のご注文</p>
+                      <p th:each="orderItem,status : ${order.orderItemList}" th:if="${status.index == 0}">他
+                      <span th:text="${status.size - 1}"></span>件のご注文
+                      </p>
                       <p>注文日：<span th:text="${#dates.format(order.orderDate, 'yyyy年MM月dd日')}">2022年5月6日</span></p>
                       <p>
                         <span th:text="${#dates.format(new java.util.Date(order.deliveryTime), 'yyyy年MM月dd日 hh時')}">2022年5月6日</span>に
@@ -97,7 +103,6 @@
                         <span th:unless="${order.status == 4}" th:text="配達予定です">配達予定です</span>
                       </p>
                     </div>
-                  </th:block>
                 </th>
               </tr>
             </tbody>

@@ -5,12 +5,12 @@ package jp.co.example.ecommerce_b.controller;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
@@ -55,14 +55,19 @@ public class OrderController {
 	 * @return ログインしてなければログイン画面、注文情報がなければ商品一覧画面、あれば注文確認画面へ遷移
 	 */
 	@RequestMapping("/confirm")
-	public String showOrderConfirm(UpdateOrderForm form, Model model) {
-		session.setAttribute("userId", 1);
-		Integer userId = (Integer) session.getAttribute("userId");
-		if (userId == null) {
+	public String showOrderConfirm(UpdateOrderForm form, Model model, @AuthenticationPrincipal LoginUser loginUser) {
+		if (loginUser == null) {
 			return "redirect:/login";
 		}
-		//仮データを入れて検証
-		Order order = orderService.showCart(userId, 0);
+		Integer userId = loginUser.Getusers().getId();
+		String preId = (String) session.getAttribute("preId");
+		
+		Order order = null;
+		if (orderService.showCart(0, 0, preId) != null) {
+			order = orderService.showCart(0, 0, preId);
+		} else {
+			order = orderService.showCart(userId, 0, null);
+		}
 		if (order == null) {
 			return "item_list_curry";
 		}
@@ -98,34 +103,44 @@ public class OrderController {
 	public String order(
 			@Validated UpdateOrderForm form,
 			BindingResult result,
-			Model model) throws ParseException {
+			Model model,
+			@AuthenticationPrincipal LoginUser loginUser) throws ParseException {
 		//送信時の日付をlong型で取得
 		long today = new Date().getTime();
 		
 		//入力された日付と時刻を文字列として結合したあとにlong型でフォーマット
-		String delivaryDateTime = form.getDeliveryDate() + " " + form.getDeliveryTime();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh");
-		long delivaryDateTimeLong = sdf.parse(delivaryDateTime).getTime();
-		
-		//時刻を比較して時間差を抽出
-		long diff = delivaryDateTimeLong - today;
-		TimeUnit time = TimeUnit.HOURS;
-		long difference = time.convert(diff, TimeUnit.MILLISECONDS);
-		
-		//時間差が3時間より小さけれればエラー文を格納
-		if (difference < 3) {
-			result.rejectValue("deliveryDate", null, "今から3時間後の日時をご入力ください");
+		long delivaryDateTimeLong = 0;
+		if (!form.getDeliveryDate().isBlank()) {
+			String delivaryDateTime = form.getDeliveryDate() + " " + form.getDeliveryTime();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh");
+			delivaryDateTimeLong = sdf.parse(delivaryDateTime).getTime();
+			
+			//時刻を比較して時間差を抽出
+			long diff = delivaryDateTimeLong - today;
+			TimeUnit time = TimeUnit.HOURS;
+			long difference = time.convert(diff, TimeUnit.MILLISECONDS);
+			
+			//時間差が3時間より小さけれればエラー文を格納
+			if (difference < 3) {
+				result.rejectValue("deliveryDate", null, "今から3時間後の日時をご入力ください");
+			}
 		}
 		//1つでもエラーがあれば注文完了画面へ
 		if (result.hasErrors()) {
-			return showOrderConfirm(form, model);
+			return showOrderConfirm(form, model, loginUser);
 		}
 		//java.sql.Dateへ現時点の日付を変換
 		java.sql.Date sqlToday = new java.sql.Date(today);
 		Timestamp todayTimestamp = new Timestamp(delivaryDateTimeLong);
 		
 		//orderオブジェクトにformの値をコピー
-		Order order = orderService.showCart((Integer) session.getAttribute("userId"), 0);
+		String preId = (String) session.getAttribute("preId");
+		Order order = null;
+		if (preId != null) {
+			order = orderService.showCart(0, 0, preId);
+		} else {
+			order = orderService.showCart(loginUser.Getusers().getId(), 0, null);
+		}
 		if (order == null) {
 			return "redirect:/item/showList";
 		}
@@ -133,6 +148,7 @@ public class OrderController {
 		
 		//コピーできなかった値を手動でコピー
 		order.setId(order.getId());
+		order.setUserId(loginUser.Getusers().getId());
 		order.setOrderDate(sqlToday);
 		order.setDeliveryTime(todayTimestamp);
 		order.setPaymentMethod(form.getIntPaymentMethod());
@@ -170,6 +186,7 @@ public class OrderController {
 		}
 		Integer userId = loginUser.Getusers().getId();
 		List<Order> orderList = orderService.getHistory(userId);
+		System.out.println(orderList.size());
 		model.addAttribute("orderList", orderList);
 		return "order_history";
 	}
@@ -177,31 +194,31 @@ public class OrderController {
 
 	@RequestMapping("toCartList")
 	
-	public String toCartList(Model model) {
+	public String toCartList(Model model, @AuthenticationPrincipal LoginUser loginUser) {
 		
 		Order order = new Order();
 		//ログイン状態の条件分岐
-		if(session.getAttribute("userId") !=null) {
+		if(loginUser !=null) {
 			//ログインしている
-			order=orderService.getCartList((Integer)session.getAttribute("userId"));
-		}else if(session.getAttribute("preId") != null) {
+			order=orderService.getCartList(loginUser.Getusers().getId());
+		}else {
 			//非ログイン
 			order=orderService.getNotLoginCartList((String)session.getAttribute("preId"));
 		}
 		
-		
 		//orderListをrequestスコープに格納(orderList)
-		if(order == null || order.getOrderItemList().isEmpty()) {
+		if(order == null || order.getOrderItemList() == null) {
 			model.addAttribute("cartNullMessage","カートに商品がありません");
-		}else {
-			
-		model.addAttribute("cart",order);
+		} else if(order.getOrderItemList().isEmpty()) {
+			model.addAttribute("cartNullMessage","カートに商品がありません");
+		} else {
+			model.addAttribute("cart",order);
 		}
 		return "cart_list";
 	}
 	
 	@RequestMapping("/deleteCart")
-	public String deleteCart(Integer orderId,Integer subTotalPrice,Model model) {
+	public String deleteCart(Integer orderId,Integer subTotalPrice,Model model, @AuthenticationPrincipal LoginUser loginUser) {
 		
 		Order order = new Order();
 		
@@ -209,12 +226,13 @@ public class OrderController {
 	
 		int total=0;
 		//ログイン状態の分岐
-		if(session.getAttribute("userId") != null) {
+		if(loginUser != null) {
 			//ログインユーザーの処理
-			total=orderService.getTotalPrice((Integer)session.getAttribute("userId"));
-			order.setUserId((Integer)session.getAttribute("userId"));
+			Integer userId = loginUser.Getusers().getId();
+			total=orderService.getTotalPrice(userId);
+			order.setUserId(userId);
 			
-		}else if(session.getAttribute("preId") != null) {
+		}else {
 			total=orderService.getNotLoginTotalPrice((String)session.getAttribute("preId"));
 			order.setPreId((String)session.getAttribute("preId"));
 		}
@@ -222,6 +240,6 @@ public class OrderController {
 		order.setTotalPrice(total);
 		orderService.updateOrder(order);
 		orderService.deleteCart(orderId);
-		return toCartList(model);
+		return toCartList(model, loginUser);
 	}
 }

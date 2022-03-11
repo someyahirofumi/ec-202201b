@@ -56,7 +56,7 @@ public class EcController {
 	 * @return 商品詳細画面へフォワード
 	 */
 	@RequestMapping("/toItemDetail")
-	public String toItemDetail(Integer itemId, Model model,  @AuthenticationPrincipal LoginUser loginUser) {
+	public String toItemDetail(Integer itemId, Model model, @AuthenticationPrincipal LoginUser loginUser) {
 //		System.out.println("システム起動");
 		Item item = itemService.findByItemId(itemId);
 		// Item item = itemService.findByItemId(1);
